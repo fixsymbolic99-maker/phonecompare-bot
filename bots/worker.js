@@ -18,18 +18,9 @@ class Worker {
   async startStore(storeId) {
     const stores = require('../config/stores');
     const store = stores.find(s => s.id === storeId);
-    if (!store) {
-      throw new Error(`Store ${storeId} not found`);
-    }
+    if (!store) throw new Error(`Store ${storeId} not found`);
     const result = await this.engine.manager.scrapeStore(store);
-    // تخزين النتيجة في MongoDB
-    await dbService.upsertProduct(
-      store.id,
-      result.name,
-      result.price,
-      result.url,
-      result.currency
-    );
+    await dbService.upsertProduct(store.id, result.name, result.price, result.url, result.currency);
     logger.info(`Manually scraped store ${storeId}`);
     return result;
   }
@@ -39,4 +30,13 @@ class Worker {
   }
 }
 
-module.exports = new Worker();
+const instance = new Worker();
+
+// عشان يشتغل لوحده لما GitHub يناديه
+if (require.main === module) {
+  instance.startAll().catch(err => {
+    console.error('Error running scraper:', err);
+  });
+}
+
+module.exports = instance;

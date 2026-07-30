@@ -1,4 +1,6 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 
 class BasePlugin {
   constructor(store) {
@@ -12,23 +14,20 @@ class BasePlugin {
   async makeRequest(url) {
     let browser = null;
     try {
-      // تشغيل المتصفح في الخلفية (بدون واجهة)
       browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled']
       });
       
       const page = await browser.newPage();
       
-      // محاكاة متصفح حقيقي (User Agent)
+      // محاكاة متصفح حقيقي جداً (User Agent + عرض الشاشة)
       await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+      await page.setViewport({ width: 1920, height: 1080 });
       
-      // الذهاب للصفحة وانتظار تحميل المحتوى
-      await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+      await page.goto(url, { waitUntil: 'networkidle2', timeout: 40000 });
       
-      // جلب كود HTML للصفحة كاملة (زي ما المتصفح بيشوفها بالضبط)
       const html = await page.content();
-      
       return html;
 
     } catch (error) {
@@ -39,7 +38,6 @@ class BasePlugin {
   }
 
   parsePrice(priceStr) {
-    // إزالة الرموز النقدية والمسافات، وتحويل إلى رقم عشري
     const cleaned = priceStr.replace(/[^\d.,]/g, '').replace(',', '.');
     return parseFloat(cleaned);
   }

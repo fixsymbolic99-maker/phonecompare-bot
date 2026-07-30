@@ -1,40 +1,37 @@
 const logger = require('../utils/logger');
 const cacheService = require('../services/cache.service');
 
+// تحميل جميع الـ plugins مرة واحدة
+const pluginsMap = {
+  amazon: require('../plugins/amazon'),
+  bestbuy: require('../plugins/bestbuy'),
+  walmart: require('../plugins/walmart'),
+  apple: require('../plugins/apple'),
+};
+
 class Manager {
   constructor() {
-    // خريطة لتخزين مثيلات الـ plugins
-    this.plugins = new Map();
+    // خريطة لتخزين المثيلات بعد إنشائها
+    this.instances = new Map();
   }
 
   getPlugin(store) {
-    if (this.plugins.has(store.id)) {
-      return this.plugins.get(store.id);
+    if (this.instances.has(store.id)) {
+      return this.instances.get(store.id);
     }
-    // تحميل الـ plugin المناسب
-    let PluginClass;
+
+    const PluginClass = pluginsMap[store.plugin];
+    if (!PluginClass) {
+      logger.error(`No plugin class found for store ${store.id} (plugin: ${store.plugin})`);
+      return null;
+    }
+
     try {
-      switch (store.plugin) {
-        case 'amazon':
-          PluginClass = require('../plugins/amazon');
-          break;
-        case 'bestbuy':
-          PluginClass = require('../plugins/bestbuy');
-          break;
-        case 'walmart':
-          PluginClass = require('../plugins/walmart');
-          break;
-        case 'apple':
-          PluginClass = require('../plugins/apple');
-          break;
-        default:
-          PluginClass = require('../plugins/base');
-      }
       const instance = new PluginClass(store);
-      this.plugins.set(store.id, instance);
+      this.instances.set(store.id, instance);
       return instance;
     } catch (error) {
-      logger.error(`Failed to load plugin for ${store.id}: ${error.message}`);
+      logger.error(`Failed to instantiate plugin for ${store.id}: ${error.message}`);
       return null;
     }
   }
@@ -45,7 +42,6 @@ class Manager {
       throw new Error(`No plugin available for store ${store.id}`);
     }
 
-    // التحقق من الكاش
     const cacheKey = `price_${store.id}`;
     const cached = cacheService.get(cacheKey);
     if (cached) {
@@ -54,7 +50,6 @@ class Manager {
     }
 
     const result = await plugin.fetchProduct();
-    // تخزين في الكاش
     cacheService.set(cacheKey, result);
     return result;
   }

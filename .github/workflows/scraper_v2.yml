@@ -11,8 +11,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22.x'
-      - run: npm install
-      - run: node bots/worker.js
+      - name: Install dependencies
+        run: npm install
+      - name: Run scraper
+        run: node bots/worker.js
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}

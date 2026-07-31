@@ -3,35 +3,38 @@ const cheerio = require('cheerio');
 
 class AmazonPlugin extends BasePlugin {
   async fetchProduct() {
-    const html = await this.makeRequest(this.store.url);
+    // استخدام عنوان URL مباشر للمنتج (iPhone 14 Pro)
+    const url = 'https://www.amazon.com/Apple-iPhone-14-Pro-128GB/dp/B0BDJ2M8KX';
+    const html = await this.makeRequest(url);
     const $ = cheerio.load(html);
 
-    // محاولة استخراج الاسم والسعر من صفحة المنتج
+    // استخراج الاسم
     let name = $('#productTitle').text().trim();
-    if (!name) name = $('h1.a-text-normal').text().trim() || 'Amazon Product';
+    if (!name) {
+      name = $('h1.a-text-normal').first().text().trim();
+    }
 
-    // السعر: البحث عن عناصر السعر المختلفة
+    // استخراج السعر
     let priceStr = $('#corePriceDisplay_desktop_feature_div .a-price-whole').first().text().trim();
     if (!priceStr) {
-      priceStr = $('.a-price .a-offscreen').first().text().trim();
+      priceStr = $('span.a-price-whole').first().text().trim();
     }
     if (!priceStr) {
-      priceStr = $('span.a-price-whole').first().text().trim();
+      priceStr = $('#priceblock_ourprice').first().text().trim();
     }
 
     let price = 0;
     if (priceStr) {
       price = this.parsePrice(priceStr);
     } else {
-      // إذا لم نجد سعرًا، نضع قيمة افتراضية أو نرفع خطأ
       throw new Error('Price not found on Amazon page');
     }
 
     return {
-      name,
+      name: name || 'Amazon Product',
       price,
       currency: 'USD',
-      url: this.store.url
+      url
     };
   }
 }

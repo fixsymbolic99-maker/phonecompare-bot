@@ -31,10 +31,20 @@ class Engine {
     if (!this.isRunning) return;
     logger.info('Starting scraping cycle');
 
-    const stores = require('../config/stores');
+    // **الحل السحري:** نمسح الكاش ونقرا الملف من الصفر كل مرة
+    const storesPath = '../config/stores';
+    delete require.cache[require.resolve(storesPath)];
+    const stores = require(storesPath);
+
     for (const store of stores) {
-      if (!store.enabled) continue;
+      // فلترة المتاجر حسب الحالة (enabled)
+      if (!store.enabled) {
+        logger.info(`Skipping ${store.id} (disabled)`);
+        continue; 
+      }
+
       try {
+        logger.info(`Scraping ${store.id}...`);
         const result = await this.manager.scrapeStore(store);
         if (result) {
           const productId = dbService.upsertProduct(
@@ -53,11 +63,10 @@ class Engine {
 
     logger.info('Scraping cycle completed');
 
-    // إرسال التقرير - مع إصلاح خطأ forEach
+    // إرسال التقرير (تم إصلاحه مسبقاً)
     if (config.ALERT_EMAIL) {
       try {
         const summary = await reportService.generateSummary();
-        // التحقق من أن المنتجات مصفوفة قبل استخدام forEach
         if (summary && Array.isArray(summary.products) && summary.products.length > 0) {
           let html = `<h2>تقرير تحديث الأسعار</h2><p>تم فحص ${summary.total} منتج.</p><ul>`;
           summary.products.forEach(p => {
@@ -78,6 +87,7 @@ class Engine {
       }
     }
 
+    // جدولة الدورة التالية
     if (this.isRunning) {
       this.currentTask = setTimeout(() => this.runCycle(), 60000);
     }

@@ -2,7 +2,7 @@ module.exports = [
   {
     id: 'amazon',
     name: 'Amazon',
-    url: 'https://amzn.eu/d/0fnJSx5Z',
+    url: 'https://www.amazon.com/dp/B0BDJ2M8KX',
     enabled: true,
     plugin: 'amazon'
   },

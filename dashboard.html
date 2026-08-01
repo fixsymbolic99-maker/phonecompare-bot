@@ -6,6 +6,9 @@
     <title>PhoneCompare Bot</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        /* إصلاح رقم 4: إزالة اللون الأزرق المزعج عند الضغط */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
+
         :root {
             --bg: #07070a; --surface: #131316; --surface-2: #191a1e; --surface-3: #202127;
             --border: rgba(255,255,255,.08); --border-soft: rgba(255,255,255,.045);
@@ -21,7 +24,6 @@
             --shadow-card: 0 1px 2px rgba(0,0,0,.45), 0 14px 32px -14px rgba(0,0,0,.6);
             --shadow-pop: 0 26px 64px -16px rgba(0,0,0,.8), 0 0 0 1px var(--border);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', -apple-system, sans-serif; }
 
         html { scrollbar-color: #2c2d33 transparent; scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 9px; height: 9px; }
@@ -54,7 +56,8 @@
         .login-card input::placeholder { color: var(--text-faint); }
         .login-card input:focus { border-color: var(--accent); background: #1d1e23; box-shadow: 0 0 0 4px var(--accent-soft); }
         .login-card input:focus + svg, .input-group:focus-within svg { fill: var(--accent-hover); }
-        .login-card button { width: 100%; padding: .9rem; border: none; border-radius: var(--radius-sm); background: linear-gradient(180deg, var(--accent-hover), var(--accent)); color: #fff; font-weight: 700; font-size: .98rem; cursor: pointer; transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease); box-shadow: 0 12px 26px -8px rgba(124,92,250,.6), 0 1px 0 rgba(255,255,255,.12) inset; display: flex; align-items: center; justify-content: center; gap: .5rem; }
+        /* إصلاح رقم 3: زر الدخول صغير ومتناسق */
+        .login-card button { width: 100%; padding: 0.7rem; border: none; border-radius: var(--radius-sm); background: linear-gradient(180deg, var(--accent-hover), var(--accent)); color: #fff; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease); box-shadow: 0 8px 20px -6px rgba(124,92,250,.5); display: flex; align-items: center; justify-content: center; gap: .4rem; }
         .login-card button:hover { filter: brightness(1.08); transform: translateY(-1px); }
         .login-card button:active { transform: translateY(0); filter: brightness(.96); }
         .login-error { color: var(--danger); font-size: .82rem; margin-top: 1rem; min-height: 1.4rem; font-weight: 600; }
@@ -179,8 +182,9 @@
         .admin-card { background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; position: relative; box-shadow: var(--shadow-card); transition: border-color .25s var(--ease); cursor: default; }
         .admin-card:hover { border-color: var(--accent-soft); transform: none; box-shadow: var(--shadow-card); }
         .admin-card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: .8rem; }
-        .admin-card-image-wrap { position: relative; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem; height: 152px; background: linear-gradient(135deg, #1e1e23, #141416); display: flex; align-items: center; justify-content: center; }
-        .admin-card-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s var(--ease); }
+        /* إصلاح رقم 2: الصورة تظهر كاملة داخل الكارت */
+        .admin-card-image-wrap { position: relative; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem; height: 160px; background: linear-gradient(135deg, #1e1e23, #141416); display: flex; align-items: center; justify-content: center; }
+        .admin-card-image-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform .5s var(--ease); }
         .admin-card-image-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; color: var(--text-faint); }
         .admin-card-image-empty svg { width: 42px; height: 42px; fill: var(--text-faint); opacity: .6; }
         .admin-card-image-empty span { font-size: .8rem; font-weight: 600; }
@@ -227,18 +231,18 @@
         .btn-secondary-modal { display: inline-flex; align-items: center; gap: .5rem; border: none; padding: .7rem 1.4rem; border-radius: var(--radius-xs); cursor: pointer; font-size: .88rem; font-weight: 700; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); transition: transform .18s var(--ease), background-color .18s var(--ease); }
         .btn-secondary-modal:hover { background: var(--surface-3); transform: translateY(-1px); }
         
-        /* --- Upload Area Fix --- */
+        /* إصلاح رقم 1: الصورة لن تخرج خارج حقل الرفع */
         .upload-area {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 1rem; border: 1px dashed var(--border); border-radius: var(--radius-xs);
-            background: var(--surface-2); cursor: pointer; transition: border-color .2s var(--ease), background-color .2s var(--ease);
-            position: relative; min-height: 100px; width: 100%; overflow: hidden;
+            padding: 1rem; border: 2px dashed var(--border); border-radius: var(--radius-xs);
+            background: var(--surface-2); cursor: pointer; transition: 0.2s;
+            min-height: 120px; width: 100%; overflow: hidden; position: relative;
         }
         .upload-area:hover { border-color: var(--accent); background: var(--surface-3); }
         .upload-area input[type="file"] { display: none; }
-        .upload-area svg { width: 32px; height: 32px; fill: var(--text-faint); }
+        .upload-area svg { width: 40px; height: 40px; fill: var(--text-faint); }
         .upload-area span { color: var(--text-dim); font-size: .85rem; }
-        .upload-preview { display: block; margin-top: 10px; max-width: 100%; max-height: 150px; border-radius: var(--radius-xs); border: 1px solid var(--border); object-fit: contain; width: auto; height: auto; max-width: 100%; }
+        .upload-preview { display: block; margin-top: 10px; width: 100%; height: 120px; object-fit: contain; border-radius: 8px; background: transparent; }
 
         @media (max-width: 600px) {
             #main-content { padding: 1.1rem 1.1rem 2rem; }
@@ -251,7 +255,6 @@
     </style>
 </head>
 <body>
-    <!-- نفس الـ HTML السابق -->
     <div id="login-screen">
         <div class="login-card">
             <div class="login-logo">PC</div>
@@ -443,7 +446,7 @@
 
         let tempAddImage = null;
         let tempEditImage = null;
-        let pendingAction = null; // لتخزين الدالة التي سيتم تنفيذها بعد التأكيد
+        let pendingAction = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             loginScreen.style.display = 'flex';
@@ -868,4 +871,4 @@
 
     </script>
 </body>
-    </html>
+</html>

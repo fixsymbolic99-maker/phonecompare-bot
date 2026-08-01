@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const config = require('./config/config');
 const authMiddleware = require('./middleware/auth');
 const scheduler = require('./scheduler/scheduler');
@@ -16,20 +17,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// ===== تسجيل الدخول =====
+// ===== مسارات عامة =====
 app.post('/api/auth/login', (req, res) => {
   const { password } = req.body;
   if (!password) return res.status(400).json({ error: 'Password required' });
   if (password !== config.DASHBOARD_PASSWORD) return res.status(401).json({ error: 'Invalid password' });
-  
-  const token = jwt.sign(
-    { role: 'admin', exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 },
-    config.JWT_SECRET
-  );
+  const token = jwt.sign({ role: 'admin' }, config.JWT_SECRET, { expiresIn: '7d' });
   res.json({ token });
 });
 
-// ===== مسارات محمية =====
+// ===== مسارات التحكم في البوت =====
 app.use('/api/proxy', authMiddleware);
 
 app.post('/api/proxy/start-all', async (req, res) => {
@@ -47,53 +44,60 @@ app.post('/api/proxy/start/:storeId', async (req, res) => {
   catch (error) { logger.error(error.message); res.status(500).json({ error: error.message }); }
 });
 
-app.get('/api/proxy/status', (req, res) => {
-  res.json(worker.getStatus());
-});
-
-// ===== جلب المتاجر =====
-app.get('/api/stores', authMiddleware, (req, res) => {
-  res.json(storesList.map(({ id, name }) => ({ id, name })));
-});
-
-// ===== جلب المنتجات (MongoDB) =====
+app.get('/api/proxy/status', (req, res) => res.json(worker.getStatus()));
+app.get('/api/stores', authMiddleware, (req, res) => res.json(storesList.map(({ id, name }) => ({ id, name }))));
 app.get('/api/products', authMiddleware, async (req, res) => {
-  try {
-    const products = await dbService.getAllProducts();
-    res.json(products);
-  } catch (err) {
-    res.json([]);
-  }
+  try { res.json(await dbService.getAllProducts()); }
+  catch (err) { res.json([]); }
 });
-
-// ===== جلب السجلات (MongoDB) =====
 app.get('/api/logs', authMiddleware, async (req, res) => {
-  try {
-    const logs = await dbService.getLogs(50);
-    res.json(logs);
-  } catch (err) {
-    res.json([]);
-  }
+  try { res.json(await dbService.getLogs(50)); }
+  catch (err) { res.json([]); }
 });
 
-// ===== بدء التشغيل =====
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-  scheduler.start();
-}
+// ===== مسارات الإدارة والصور (الجديدة) =====
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
 
-// الاتصال بقاعدة البيانات عند التشغيل
-(async () => {
+// جلب قائمة الصور من مجلد images
+app.get('/api/images', authMiddleware, (req, res) => {
+  const imagesDir = path.join(__dirname, 'images');
+  if (!fs.existsSync(imagesDir)) return res.json([]);
+  const files = fs.readdirSync(imagesDir).filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f));
+  res.json(files);
+});
+
+// تعديل منتج (الاسم، السعر، الصورة)
+app.put('/api/products/:id', authMiddleware, async (req, res) => {
+  const { name, price, features, image } = req.body;
   try {
     await dbService.connect();
-    logger.info('Connected to MongoDB');
-  } catch (err) {
-    logger.error('MongoDB connection error:', err);
-  }
-})();
+    const product = await dbService.getProductById(req.params.id);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    if (name) product.name = name;
+    if (price !== undefined) product.price = price;
+    if (features) product.features = features;
+    if (image) product.image = image;
+    await product.save();
+    res.json({ message: 'Product updated' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// حذف منتج
+app.delete('/api/products/:id', authMiddleware, async (req, res) => {
+  try {
+    await dbService.connect();
+    await dbService.deleteProduct(req.params.id); // (فقط أضف هذه الدالة لاحقاً إذا لم تكن موجودة)
+    res.json({ message: 'Product deleted' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ===== التشغيل =====
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) scheduler.start();
 
 module.exports = app;
-
 if (require.main === module) {
-  const PORT = config.PORT;
-  app.listen(PORT, () => { logger.info(`Server running on port ${PORT}`); });
+  const PORT = config.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }

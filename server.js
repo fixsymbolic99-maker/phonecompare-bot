@@ -22,7 +22,8 @@ app.post('/api/auth/login', (req, res) => {
   const { password } = req.body;
   if (!password) return res.status(400).json({ error: 'Password required' });
   if (password !== config.DASHBOARD_PASSWORD) return res.status(401).json({ error: 'Invalid password' });
-  const token = jwt.sign({ role: 'admin' }, config.JWT_SECRET, { expiresIn: '7d' });
+  // تعديل مهم: استخدام process.env مباشرة لضمان تطابق المفتاح
+  const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET || 'your-secret-key-change-me', { expiresIn: '7d' });
   res.json({ token });
 });
 
@@ -55,12 +56,11 @@ app.get('/api/logs', authMiddleware, async (req, res) => {
   catch (err) { res.json([]); }
 });
 
-// ===== مسارات الإدارة والصور (الجديدة) =====
+// ===== مسارات الإدارة والصور =====
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
-// جلب قائمة الصور من مجلد images
 app.get('/api/images', authMiddleware, (req, res) => {
   const imagesDir = path.join(__dirname, 'images');
   if (!fs.existsSync(imagesDir)) return res.json([]);
@@ -68,7 +68,6 @@ app.get('/api/images', authMiddleware, (req, res) => {
   res.json(files);
 });
 
-// تعديل منتج (الاسم، السعر، الصورة)
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
   const { name, price, features, image } = req.body;
   try {
@@ -84,11 +83,10 @@ app.put('/api/products/:id', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// حذف منتج
 app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   try {
     await dbService.connect();
-    await dbService.deleteProduct(req.params.id); // (فقط أضف هذه الدالة لاحقاً إذا لم تكن موجودة)
+    await dbService.deleteProduct(req.params.id);
     res.json({ message: 'Product deleted' });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });

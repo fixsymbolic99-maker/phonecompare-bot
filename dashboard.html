@@ -206,7 +206,6 @@
         .admin-grid-empty { grid-column: 1 / -1; text-align: center; padding: 3.5rem 1.5rem; color: var(--text-faint); font-size: .9rem; font-weight: 500; background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px dashed var(--border); border-radius: var(--radius-md); }
 
         /* --- Modals --- */
-        /* رفع z-index للمودالات لضمان ظهورها فوق بعضها البعض */
         .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,8,.74); backdrop-filter: blur(7px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity .22s var(--ease), visibility .22s; padding: 1.5rem; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-box { background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.9rem; max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto; box-shadow: var(--shadow-pop); transform: scale(.94) translateY(10px); transition: transform .26s var(--ease); }
@@ -233,13 +232,13 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 1rem; border: 1px dashed var(--border); border-radius: var(--radius-xs);
             background: var(--surface-2); cursor: pointer; transition: border-color .2s var(--ease), background-color .2s var(--ease);
-            position: relative; min-height: 100px;
+            position: relative; min-height: 100px; width: 100%; overflow: hidden;
         }
         .upload-area:hover { border-color: var(--accent); background: var(--surface-3); }
         .upload-area input[type="file"] { display: none; }
         .upload-area svg { width: 32px; height: 32px; fill: var(--text-faint); }
         .upload-area span { color: var(--text-dim); font-size: .85rem; }
-        .upload-preview { display: block; margin-top: 10px; max-width: 100%; max-height: 150px; border-radius: var(--radius-xs); border: 1px solid var(--border); object-fit: contain; /* ضبط الصورة داخل الحقل */ }
+        .upload-preview { display: block; margin-top: 10px; max-width: 100%; max-height: 150px; border-radius: var(--radius-xs); border: 1px solid var(--border); object-fit: contain; width: auto; height: auto; max-width: 100%; }
 
         @media (max-width: 600px) {
             #main-content { padding: 1.1rem 1.1rem 2rem; }
@@ -354,7 +353,7 @@
         </div>
     </div>
 
-    <!-- مودال النجاح (مودال جديد أنيق) -->
+    <!-- مودال النجاح -->
     <div id="success-modal" class="modal-overlay" style="z-index: 1150;">
         <div class="modal-box">
             <div class="modal-header"><span class="modal-title">تمت العملية بنجاح</span><button class="modal-close" onclick="closeSuccessModal()">✕</button></div>
@@ -849,7 +848,7 @@
                         await apiRequest(`/api/products`, 'POST', { name, price: parseFloat(price), features, image });
                         closeAddModal(); loadAllData();
                         addLog('تم إضافة المنتج بنجاح!', 'green');
-                        openSuccessModal('تم إضافة المنتج بنجاح!'); // استخدمنا مودال النجاح
+                        openSuccessModal('تم إضافة المنتج بنجاح!');
                     } catch (err) {
                         addLog(`خطأ في الإضافة: ${err.message}`, 'red');
                         alert(`خطأ: ${err.message}`);
@@ -869,4 +868,4 @@
 
     </script>
 </body>
-</html>
+    </html>

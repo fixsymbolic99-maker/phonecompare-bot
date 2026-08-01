@@ -1,74 +1,47 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- نفس الـ meta والـ style الأساسي السابق -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>PhoneCompare Bot</title>
-    <!-- نفس الـ CSS السابق بدون تغيير -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
         :root {
-            --bg: #07070a;
-            --surface: #131316;
-            --surface-2: #191a1e;
-            --surface-3: #202127;
-            --border: rgba(255,255,255,.08);
-            --border-soft: rgba(255,255,255,.045);
-            --accent: #7c5cfa;
-            --accent-hover: #9575ff;
-            --accent-dim: #5b3fd1;
-            --accent-soft: rgba(124,92,250,.13);
-            --accent-soft-strong: rgba(124,92,250,.24);
-            --text: #f4f4f7;
-            --text-dim: #9d9daa;
-            --text-faint: #6a6a76;
-            --danger: #fb5a72;
-            --danger-soft: rgba(251,90,114,.13);
-            --info: #57a4ff;
-            --info-soft: rgba(87,164,255,.13);
-            --warn: #ffbd4a;
-            --warn-soft: rgba(255,189,74,.13);
-            --success: #34d399;
-            --success-soft: rgba(52,211,153,.13);
-            --radius-lg: 20px;
-            --radius-md: 14px;
-            --radius-sm: 10px;
-            --radius-xs: 8px;
+            --bg: #07070a; --surface: #131316; --surface-2: #191a1e; --surface-3: #202127;
+            --border: rgba(255,255,255,.08); --border-soft: rgba(255,255,255,.045);
+            --accent: #7c5cfa; --accent-hover: #9575ff; --accent-dim: #5b3fd1;
+            --accent-soft: rgba(124,92,250,.13); --accent-soft-strong: rgba(124,92,250,.24);
+            --text: #f4f4f7; --text-dim: #9d9daa; --text-faint: #6a6a76;
+            --danger: #fb5a72; --danger-soft: rgba(251,90,114,.13);
+            --info: #57a4ff; --info-soft: rgba(87,164,255,.13);
+            --warn: #ffbd4a; --warn-soft: rgba(255,189,74,.13);
+            --success: #34d399; --success-soft: rgba(52,211,153,.13);
+            --radius-lg: 20px; --radius-md: 14px; --radius-sm: 10px; --radius-xs: 8px;
             --ease: cubic-bezier(.22,1,.36,1);
             --shadow-card: 0 1px 2px rgba(0,0,0,.45), 0 14px 32px -14px rgba(0,0,0,.6);
-            --shadow-card-lg: 0 2px 4px rgba(0,0,0,.5), 0 26px 52px -18px rgba(0,0,0,.7);
             --shadow-pop: 0 26px 64px -16px rgba(0,0,0,.8), 0 0 0 1px var(--border);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', -apple-system, sans-serif; }
 
+        /* --- نفس الـ CSS القديم --- */
         html { scrollbar-color: #2c2d33 transparent; scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 9px; height: 9px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #2c2d33; border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); background-clip: padding-box; }
-
         :focus-visible { outline: 2px solid var(--accent-hover); outline-offset: 2px; border-radius: 6px; }
-
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
         }
-
         html { max-width: 100%; overflow-x: hidden; }
         body {
-            background:
-                radial-gradient(1200px 620px at 92% -12%, rgba(124,92,250,.11), transparent 60%),
-                radial-gradient(900px 550px at -5% 8%, rgba(124,92,250,.06), transparent 55%),
-                radial-gradient(700px 500px at 50% 110%, rgba(87,164,255,.045), transparent 60%),
-                var(--bg);
-            color: var(--text);
-            display: flex; min-height: 100vh; overflow-x: hidden; max-width: 100%;
-            letter-spacing: .1px;
-            -webkit-font-smoothing: antialiased;
+            background: radial-gradient(1200px 620px at 92% -12%, rgba(124,92,250,.11), transparent 60%), radial-gradient(900px 550px at -5% 8%, rgba(124,92,250,.06), transparent 55%), radial-gradient(700px 500px at 50% 110%, rgba(87,164,255,.045), transparent 60%), var(--bg);
+            color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; max-width: 100%;
+            letter-spacing: .1px; -webkit-font-smoothing: antialiased;
         }
 
-        /* ---------- Login ---------- */
+        /* --- Login --- */
         #login-screen { position: fixed; inset: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 1.5rem; }
         #login-screen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(700px 420px at 50% 15%, rgba(124,92,250,.16), transparent 65%), radial-gradient(520px 420px at 88% 88%, rgba(87,164,255,.08), transparent 60%), radial-gradient(520px 420px at 8% 90%, rgba(124,92,250,.06), transparent 60%); }
         #login-screen::after { content: ''; position: absolute; inset: 0; opacity: .5; pointer-events: none; background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px); background-size: 42px 42px; mask-image: radial-gradient(600px 500px at 50% 35%, #000, transparent 75%); }
@@ -84,12 +57,11 @@
         .login-card input:focus { border-color: var(--accent); background: #1d1e23; box-shadow: 0 0 0 4px var(--accent-soft); }
         .login-card input:focus + svg, .input-group:focus-within svg { fill: var(--accent-hover); }
         .login-card button { width: 100%; padding: .9rem; border: none; border-radius: var(--radius-sm); background: linear-gradient(180deg, var(--accent-hover), var(--accent)); color: #fff; font-weight: 700; font-size: .98rem; cursor: pointer; transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease); box-shadow: 0 12px 26px -8px rgba(124,92,250,.6), 0 1px 0 rgba(255,255,255,.12) inset; display: flex; align-items: center; justify-content: center; gap: .5rem; }
-        .login-card button svg { width: 17px; height: 17px; flex-shrink: 0; }
         .login-card button:hover { filter: brightness(1.08); transform: translateY(-1px); }
         .login-card button:active { transform: translateY(0); filter: brightness(.96); }
         .login-error { color: var(--danger); font-size: .82rem; margin-top: 1rem; min-height: 1.4rem; font-weight: 600; }
 
-        /* ---------- Sidebar ---------- */
+        /* --- Sidebar --- */
         #sidebar { position: fixed; right: 0; top: 0; width: 264px; height: 100vh; background: linear-gradient(180deg, #101014, #0a0a0d); border-left: 1px solid var(--border-soft); padding: 1.5rem 1.05rem; display: flex; flex-direction: column; transform: translateX(0); transition: transform .32s var(--ease); z-index: 100; }
         #sidebar.hidden { transform: translateX(100%); }
         .sidebar-brand { display: flex; align-items: center; gap: .75rem; margin-bottom: 2rem; padding: .2rem .3rem; }
@@ -100,7 +72,6 @@
         .sidebar-brand-text span { font-size: .68rem; color: var(--text-faint); font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
         .close-sidebar { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-dim); font-size: 1.05rem; cursor: pointer; width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; transition: background-color .16s var(--ease), color .16s var(--ease); margin-right: auto; }
         .close-sidebar:hover { background: var(--danger-soft); color: #ff8095; }
-
         .nav-section-label { font-size: .68rem; color: var(--text-faint); font-weight: 700; letter-spacing: .6px; text-transform: uppercase; padding: 0 .9rem; margin: .3rem 0 .6rem; }
         .nav-item { display: flex; align-items: center; gap: .85rem; padding: .74rem .9rem; border-radius: var(--radius-xs); color: var(--text-dim); text-decoration: none; margin-bottom: .2rem; transition: background-color .18s var(--ease), color .18s var(--ease); cursor: pointer; font-size: .89rem; font-weight: 600; position: relative; }
         .nav-item svg { width: 17px; height: 17px; fill: currentColor; flex-shrink: 0; opacity: .8; transition: opacity .18s var(--ease); }
@@ -111,32 +82,26 @@
         .nav-item.active::before { content: ''; position: absolute; right: -1.05rem; top: 50%; transform: translateY(-50%); width: 3px; height: 60%; border-radius: 4px; background: var(--accent-hover); box-shadow: 0 0 12px rgba(124,92,250,.85); }
         .sidebar-footer { margin-top: auto; border-top: 1px solid var(--border-soft); padding-top: 1.3rem; color: var(--text-faint); }
         .sidebar-footer:hover { color: #ff8095; background: var(--danger-soft); }
-
         #main-content { flex: 1; padding: 1.25rem 1.5rem 2.5rem; width: 100%; display: none; }
         @media (min-width: 768px) { #sidebar { transform: translateX(0); width: 268px; } #sidebar.hidden { transform: translateX(0); } .close-sidebar { display: none; } #main-content { margin-right: 268px; max-width: calc(100% - 268px); padding: 1.9rem 2.6rem 3rem; } }
-
-        /* ---------- Header ---------- */
         .app-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.25rem; margin-bottom: 1.9rem; border-bottom: 1px solid var(--border-soft); position: sticky; top: 0; background: transparent; z-index: 10; padding-top: .1rem; }
         .menu-toggle { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: .55rem; border-radius: var(--radius-xs); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color .16s var(--ease), border-color .16s var(--ease); }
         .menu-toggle:hover { background: var(--surface-3); border-color: rgba(255,255,255,.16); }
         .menu-toggle svg { width: 20px; height: 20px; fill: currentColor; }
         @media (min-width: 768px) { .menu-toggle { display: none; } }
-
         .header-status { display: flex; align-items: center; gap: .6rem; background: var(--surface); padding: .48rem 1.1rem; border-radius: 20px; font-size: .8rem; font-weight: 600; border: 1px solid var(--border); color: var(--text-dim); }
         .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; position: relative; }
         .dot.green { background: var(--accent-hover); box-shadow: 0 0 10px rgba(124,92,250,.75); }
         .dot.green::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid var(--accent-hover); animation: pulse-ring 1.8s var(--ease) infinite; }
         .dot.red { background: var(--danger); box-shadow: 0 0 8px rgba(251,90,114,.65); }
         @keyframes pulse-ring { 0% { transform: scale(.6); opacity: .8; } 100% { transform: scale(1.9); opacity: 0; } }
-
-        /* ---------- Pages ---------- */
         .page { display: none; animation: fade .4s var(--ease); }
         .page.active { display: block; }
         @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .page-title { font-size: 1.45rem; font-weight: 800; margin-bottom: .3rem; color: #fff; letter-spacing: -.3px; }
         .page-sub { color: var(--text-dim); font-size: .87rem; margin-bottom: 1.85rem; font-weight: 500; }
 
-        /* ---------- Stat cards ---------- */
+        /* --- Stats --- */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.05rem; margin-bottom: 1.85rem; }
         .stat-card { background: linear-gradient(180deg, #18181c, var(--surface)); padding: 1.25rem 1.3rem; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-card); transition: transform .22s var(--ease), border-color .22s var(--ease), box-shadow .22s var(--ease); }
         .stat-card:hover { transform: translateY(-3px); border-color: rgba(124,92,250,.32); box-shadow: 0 22px 44px -18px rgba(0,0,0,.65), 0 0 0 1px var(--accent-soft-strong); }
@@ -152,7 +117,7 @@
         .stat-card .value.green { color: var(--accent-hover); }
         .stat-card .value.red { color: var(--danger); }
 
-        /* ---------- Buttons ---------- */
+        /* --- Buttons --- */
         .btn { padding: .8rem 1.4rem; border: none; border-radius: var(--radius-xs); font-weight: 700; cursor: pointer; font-size: .9rem; display: flex; align-items: center; justify-content: center; gap: .55rem; transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease), background-color .18s var(--ease), border-color .18s var(--ease); flex: 1; min-width: 130px; }
         .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
         .btn:active { transform: translateY(0) !important; }
@@ -166,13 +131,11 @@
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
         .btn-outline:hover { background: var(--surface-2); border-color: rgba(255,255,255,.16); transform: translateY(-1px); }
         .action-row { display: flex; flex-wrap: wrap; gap: .85rem; margin-bottom: 1.6rem; }
-
-        /* ---------- Store select group ---------- */
         .select-store-group { display: flex; gap: .8rem; flex-wrap: wrap; margin-bottom: 1.85rem; }
         .select-store-group select { flex: 1; padding: .8rem 1rem; border-radius: var(--radius-xs); border: 1px solid var(--border); background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239d9daa' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat left 1rem center; color: var(--text); outline: none; font-size: .92rem; min-width: 150px; font-family: inherit; cursor: pointer; transition: border-color .18s var(--ease), box-shadow .18s var(--ease); appearance: none; -webkit-appearance: none; }
         .select-store-group select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 
-        /* ---------- Terminal ---------- */
+        /* --- Terminal --- */
         .terminal-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: .65rem; }
         .terminal-heading h4 { color: var(--text-dim); font-weight: 700; font-size: .82rem; letter-spacing: .2px; }
         .terminal-heading .live-tag { display: inline-flex; align-items: center; gap: .35rem; font-size: .68rem; font-weight: 700; color: var(--text-faint); letter-spacing: .4px; text-transform: uppercase; }
@@ -187,7 +150,7 @@
         .term-line.blue { color: var(--info); }
         .term-line.yellow { color: var(--warn); }
 
-        /* ---------- Table ---------- */
+        /* --- Table --- */
         .table-wrapper { background: linear-gradient(180deg, #18181c, var(--surface)); border-radius: var(--radius-md); border: 1px solid var(--border); overflow: hidden; overflow-x: auto; box-shadow: var(--shadow-card); }
         table { width: 100%; border-collapse: collapse; min-width: 400px; }
         th, td { padding: 1rem 1.2rem; text-align: right; border-bottom: 1px solid var(--border-soft); font-size: .88rem; }
@@ -203,7 +166,7 @@
         .badge.gray::before { background: var(--text-dim); }
         .empty-state { text-align: center; padding: 2.75rem; color: var(--text-faint); font-size: .9rem; font-weight: 500; }
 
-        /* ---------- Admin Tab Styles ---------- */
+        /* --- Admin Tab Styles --- */
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.85rem; flex-wrap: wrap; gap: 1.25rem; }
         .admin-header h2 { color: var(--text); font-size: 1.45rem; font-weight: 800; letter-spacing: -.3px; display: flex; align-items: center; gap: .7rem; }
         .admin-header h2::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--accent-hover); box-shadow: 0 0 0 4px var(--accent-soft), 0 0 18px rgba(124,92,250,.65); }
@@ -214,10 +177,7 @@
         .btn-secondary { display: inline-flex; align-items: center; gap: .5rem; border: none; padding: .7rem 1.4rem; border-radius: var(--radius-xs); cursor: pointer; font-size: .88rem; font-weight: 700; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); transition: transform .18s var(--ease), background-color .18s var(--ease); }
         .btn-secondary:hover { background: var(--surface-3); transform: translateY(-1px); }
         .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(264px, 1fr)); gap: 1.5rem; }
-        @media (max-width: 600px) { 
-            .admin-grid { grid-template-columns: minmax(0, 1fr); gap: 1rem; } 
-            .admin-card { padding: 1rem; }
-        }
+        @media (max-width: 600px) { .admin-grid { grid-template-columns: minmax(0, 1fr); gap: 1rem; } .admin-card { padding: 1rem; } }
         .admin-card { background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; position: relative; box-shadow: var(--shadow-card); transition: border-color .25s var(--ease); cursor: default; }
         .admin-card:hover { border-color: var(--accent-soft); transform: none; box-shadow: var(--shadow-card); }
         .admin-card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: .8rem; }
@@ -247,7 +207,7 @@
         .admin-status-badge.active::before { background: var(--accent-hover); box-shadow: 0 0 8px rgba(124,92,250,.85); }
         .admin-grid-empty { grid-column: 1 / -1; text-align: center; padding: 3.5rem 1.5rem; color: var(--text-faint); font-size: .9rem; font-weight: 500; background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px dashed var(--border); border-radius: var(--radius-md); }
 
-        /* ---------- Modals ---------- */
+        /* --- Modals --- */
         .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,8,.74); backdrop-filter: blur(7px); display: flex; justify-content: center; align-items: center; z-index: 999; opacity: 0; visibility: hidden; transition: opacity .22s var(--ease), visibility .22s; padding: 1.5rem; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-box { background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.9rem; max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto; box-shadow: var(--shadow-pop); transform: scale(.94) translateY(10px); transition: transform .26s var(--ease); }
@@ -268,49 +228,19 @@
         .btn-primary:active { transform: translateY(0); filter: brightness(.97); }
         .btn-secondary-modal { display: inline-flex; align-items: center; gap: .5rem; border: none; padding: .7rem 1.4rem; border-radius: var(--radius-xs); cursor: pointer; font-size: .88rem; font-weight: 700; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); transition: transform .18s var(--ease), background-color .18s var(--ease); }
         .btn-secondary-modal:hover { background: var(--surface-3); transform: translateY(-1px); }
-        .image-select-grid { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 10px; max-height: 178px; overflow-y: auto; padding: 4px; }
-        .image-preview { width: 76px; height: 76px; object-fit: cover; border-radius: var(--radius-xs); cursor: pointer; border: 2px solid transparent; transition: border-color .18s var(--ease), transform .18s var(--ease), filter .18s var(--ease); filter: brightness(.75); }
-        .image-preview:hover { border-color: rgba(124,92,250,.45); transform: translateY(-2px); filter: brightness(.95); }
-        .image-preview.selected { border-color: var(--accent-hover); filter: brightness(1); box-shadow: 0 0 0 3px var(--accent-soft); }
         
-        /* تعديل: حقل رفع الصور Base64 */
+        /* --- Upload Area Fix --- */
         .upload-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            border: 1px dashed var(--border);
-            border-radius: var(--radius-xs);
-            background: var(--surface-2);
-            cursor: pointer;
-            transition: border-color .2s var(--ease), background-color .2s var(--ease);
-            margin-bottom: 0.5rem;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 1rem; border: 1px dashed var(--border); border-radius: var(--radius-xs);
+            background: var(--surface-2); cursor: pointer; transition: border-color .2s var(--ease), background-color .2s var(--ease);
+            margin-bottom: 0.5rem; gap: 0.5rem;
         }
-        .upload-area:hover {
-            border-color: var(--accent);
-            background: var(--surface-3);
-        }
-        .upload-area input[type="file"] {
-            display: none;
-        }
-        .upload-area svg {
-            width: 32px;
-            height: 32px;
-            fill: var(--text-faint);
-            margin-bottom: 0.3rem;
-        }
-        .upload-area span {
-            color: var(--text-dim);
-            font-size: .85rem;
-        }
-        .upload-preview {
-            max-width: 100%;
-            max-height: 150px;
-            border-radius: var(--radius-xs);
-            margin-top: 0.5rem;
-            border: 1px solid var(--border);
-        }
+        .upload-area:hover { border-color: var(--accent); background: var(--surface-3); }
+        .upload-area input[type="file"] { display: none; }
+        .upload-area svg { width: 32px; height: 32px; fill: var(--text-faint); }
+        .upload-area span { color: var(--text-dim); font-size: .85rem; }
+        .upload-preview { display: block; margin: 10px auto; max-width: 100%; max-height: 150px; border-radius: var(--radius-xs); border: 1px solid var(--border); }
 
         @media (max-width: 600px) {
             #main-content { padding: 1.1rem 1.1rem 2rem; }
@@ -323,6 +253,7 @@
     </style>
 </head>
 <body>
+    <!-- نفس الـ HTML السابق (Login, Sidebar, Pages) -->
     <div id="login-screen">
         <div class="login-card">
             <div class="login-logo">PC</div>
@@ -412,6 +343,18 @@
         </div>
     </div>
 
+    <!-- مودال تأكيد الإضافة الجديد -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header"><span class="modal-title" id="confirm-title">تأكيد الإجراء</span><button class="modal-close" onclick="closeConfirmModal()">✕</button></div>
+            <div style="padding: 1rem 0; color: var(--text-dim); font-size: 1rem; text-align: center;" id="confirm-message">هل أنت متأكد؟</div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary-modal" onclick="closeConfirmModal()">إلغاء</button>
+                <button type="button" class="btn-primary" id="confirm-yes-btn">تأكيد</button>
+            </div>
+        </div>
+    </div>
+
     <!-- مودال تعديل المنتج -->
     <div id="edit-modal" class="modal-overlay">
         <div class="modal-box">
@@ -421,9 +364,7 @@
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="edit-name" required></div>
                 <div class="form-group"><label>السعر (USD)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" required></div>
                 <div class="form-group"><label>المميزات</label><textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
-                <div class="form-group"><label>الصورة الحالية</label>
-                    <div id="current-image-preview"></div>
-                </div>
+                <div class="form-group"><label>الصورة الحالية</label><div id="current-image-preview"></div></div>
                 <div class="form-group">
                     <label>استبدال الصورة (رفع صورة جديدة)</label>
                     <div class="upload-area" onclick="document.getElementById('edit-image-input').click()">
@@ -431,7 +372,7 @@
                         <span>انقر لاختيار صورة</span>
                     </div>
                     <input type="file" id="edit-image-input" accept="image/*" style="display:none;" onchange="handleEditImageUpload(this)">
-                    <img id="edit-image-preview" class="upload-preview" style="display:none;">
+                    <img id="edit-image-preview" class="upload-preview">
                 </div>
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAdminModal()">إلغاء</button><button type="submit" class="btn-primary">حفظ التعديلات</button></div>
             </form>
@@ -455,7 +396,7 @@
                     <input type="file" id="add-image-input" accept="image/*" style="display:none;" onchange="handleAddImageUpload(this)">
                     <img id="add-image-preview" class="upload-preview" style="display:none;">
                 </div>
-                <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAddModal()">إلغاء</button><button type="submit" class="btn-primary">إضافة المنتج</button></div>
+                <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAddModal()">إلغاء</button><button type="submit" class="btn-primary" id="add-submit-btn">إضافة المنتج</button></div>
             </form>
         </div>
     </div>
@@ -491,9 +432,9 @@
         const productsTbody = document.getElementById('products-tbody');
         const adminGrid = document.getElementById('admin-products-grid');
 
-        // متغيرات لحفظ الصور Base64
         let tempAddImage = null;
         let tempEditImage = null;
+        let pendingAction = null; // لتخزين الدالة التي سيتم تنفيذها بعد التأكيد
 
         document.addEventListener('DOMContentLoaded', () => {
             loginScreen.style.display = 'flex';
@@ -652,7 +593,7 @@
         async function loadAdminProducts() {
             try {
                 const products = await apiRequest('/api/products');
-                const images = await apiRequest('/api/images'); // هذا المسار لم يعد مستخدماً للصور الجديدة، لكن سنحتفظ به للتوافق
+                const images = await apiRequest('/api/images'); 
                 adminGrid.innerHTML = '';
                 if (products.length === 0) {
                     adminGrid.innerHTML = `<div class="admin-grid-empty">لا توجد منتجات بعد. اضغط "إضافة منتج" للبدء.</div>`;
@@ -662,8 +603,6 @@
                 products.forEach((product) => {
                     const card = document.createElement('div');
                     card.className = 'admin-card';
-                    
-                    // توليد HTML للصورة (Base64)
                     let imageHtml = '';
                     if (product.image && product.image.startsWith('data:image')) {
                         imageHtml = `<div class="admin-card-image-wrap"><img src="${product.image}" class="admin-card-image" alt="${product.name}"></div>`;
@@ -720,20 +659,15 @@
             document.getElementById('edit-name').value = product.name;
             document.getElementById('edit-price').value = product.price;
             document.getElementById('edit-features').value = product.features || '';
-            
-            // عرض الصورة الحالية
             const currentPreview = document.getElementById('current-image-preview');
             if (product.image && product.image.startsWith('data:image')) {
                 currentPreview.innerHTML = `<img src="${product.image}" style="max-width:100%; max-height:100px; border-radius:8px; margin-top:8px;">`;
             } else {
                 currentPreview.innerHTML = `<span style="color:var(--text-faint); font-size:0.9rem;">لا توجد صورة حالياً</span>`;
             }
-
-            // تصفير الصورة المؤقتة
             tempEditImage = null;
             document.getElementById('edit-image-preview').style.display = 'none';
             document.getElementById('edit-image-input').value = '';
-
             document.getElementById('edit-modal').classList.add('active');
         }
 
@@ -745,7 +679,7 @@
             const name = document.getElementById('edit-name').value;
             const price = parseFloat(document.getElementById('edit-price').value);
             const features = document.getElementById('edit-features').value;
-            const image = tempEditImage; // الصورة المرفوعة Base64
+            const image = tempEditImage;
             try {
                 await apiRequest(`/api/products/${id}`, 'PUT', { name, price, features, image });
                 closeAdminModal(); loadAllData();
@@ -796,7 +730,7 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                tempAddImage = e.target.result; // حفظ الصورة كـ Base64
+                tempAddImage = e.target.result;
                 const preview = document.getElementById('add-image-preview');
                 preview.src = tempAddImage;
                 preview.style.display = 'block';
@@ -810,7 +744,7 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                tempEditImage = e.target.result; // حفظ الصورة كـ Base64
+                tempEditImage = e.target.result;
                 const preview = document.getElementById('edit-image-preview');
                 preview.src = tempEditImage;
                 preview.style.display = 'block';
@@ -820,7 +754,33 @@
         }
 
         /* ==================================================
-           دوال مودال إضافة منتج جديد (Add Product)
+           مودال التأكيد (Confirm Modal)
+           ================================================== */
+        function openConfirmModal(title, message, onConfirm) {
+            document.getElementById('confirm-title').textContent = title || 'تأكيد الإجراء';
+            document.getElementById('confirm-message').textContent = message || 'هل أنت متأكد؟';
+            pendingAction = onConfirm;
+            document.getElementById('confirm-modal').classList.add('active');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.remove('active');
+            pendingAction = null;
+        }
+
+        document.getElementById('confirm-yes-btn').addEventListener('click', function() {
+            if (typeof pendingAction === 'function') {
+                pendingAction();
+            }
+            closeConfirmModal();
+        });
+
+        document.getElementById('confirm-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeConfirmModal();
+        });
+
+        /* ==================================================
+           دوال مودال إضافة منتج جديد (Add Product) - مع التأكيد
            ================================================== */
         function closeAddModal() {
             document.getElementById('add-modal').classList.remove('active');
@@ -839,22 +799,43 @@
             document.getElementById('add-modal').classList.add('active');
         }
 
-        document.getElementById('add-form').addEventListener('submit', async (e) => {
+        // ربط زر إضافة المنتج بمودال التأكيد بدلاً من الإضافة المباشرة
+        document.getElementById('add-submit-btn').addEventListener('click', function(e) {
             e.preventDefault();
-            const name = document.getElementById('add-name').value;
-            const price = parseFloat(document.getElementById('add-price').value);
-            const features = document.getElementById('add-features').value;
-            const image = tempAddImage; // الصورة Base64
-            try {
-                await apiRequest(`/api/products`, 'POST', { name, price, features, image });
-                closeAddModal(); loadAllData();
-                addLog('تم إضافة المنتج بنجاح!', 'green');
-                alert('تم إضافة المنتج بنجاح!');
-            } catch (err) {
-                addLog(`خطأ في الإضافة: ${err.message}`, 'red');
-                alert(`خطأ: ${err.message}`);
+            // جمع البيانات
+            const name = document.getElementById('add-name').value.trim();
+            const price = document.getElementById('add-price').value.trim();
+            if (!name || !price) {
+                alert('يرجى ملء اسم المنتج والسعر.');
+                return;
             }
+            const features = document.getElementById('add-features').value;
+            const image = tempAddImage;
+
+            // فتح مودال التأكيد
+            openConfirmModal(
+                'تأكيد إضافة المنتج',
+                `هل أنت متأكد من إضافة المنتج "${name}" بسعر ${price} USD؟`,
+                async function() {
+                    // هذا الكود سيتم تنفيذه عند الضغط على "تأكيد"
+                    try {
+                        await apiRequest(`/api/products`, 'POST', { name, price: parseFloat(price), features, image });
+                        closeAddModal(); loadAllData();
+                        addLog('تم إضافة المنتج بنجاح!', 'green');
+                        alert('تم إضافة المنتج بنجاح!');
+                    } catch (err) {
+                        addLog(`خطأ في الإضافة: ${err.message}`, 'red');
+                        alert(`خطأ: ${err.message}`);
+                    }
+                }
+            );
         });
+
+        // منع الإرسال التقليدي للنموذج
+        document.getElementById('add-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+
     </script>
 </body>
 </html>

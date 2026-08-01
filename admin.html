@@ -8,72 +8,79 @@
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap');
 
         :root {
-            --bg: #0a0a0f;
-            --surface: #141414;
-            --surface-2: #1a1a1a;
-            --surface-3: #1f1f22;
-            --border: rgba(255,255,255,.07);
-            --border-soft: rgba(255,255,255,.04);
-            --accent: #7c3aed;
-            --accent-hover: #8f5cf5;
-            --accent-soft: rgba(124,58,237,.12);
-            --accent-soft-strong: rgba(124,58,237,.22);
-            --text: #f2f2f5;
-            --text-dim: #9a9aa5;
-            --text-faint: #67676f;
-            --danger: #f8536b;
-            --danger-soft: rgba(248,83,107,.12);
-            --radius-lg: 18px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
+            --bg: #07070a;
+            --surface: #131316;
+            --surface-2: #191a1e;
+            --surface-3: #202127;
+            --border: rgba(255,255,255,.08);
+            --border-soft: rgba(255,255,255,.045);
+            --accent: #7c5cfa;
+            --accent-hover: #9575ff;
+            --accent-dim: #5b3fd1;
+            --accent-soft: rgba(124,92,250,.13);
+            --accent-soft-strong: rgba(124,92,250,.24);
+            --text: #f4f4f7;
+            --text-dim: #9d9daa;
+            --text-faint: #6a6a76;
+            --danger: #fb5a72;
+            --danger-soft: rgba(251,90,114,.13);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 9px;
+            --radius-xs: 8px;
             --ease: cubic-bezier(.22,1,.36,1);
-            --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 28px -12px rgba(0,0,0,.55);
-            --shadow-card-hover: 0 1px 2px rgba(0,0,0,.4), 0 24px 48px -16px rgba(0,0,0,.7), 0 0 0 1px var(--accent-soft-strong);
-            --shadow-pop: 0 20px 50px -12px rgba(0,0,0,.7), 0 0 0 1px var(--border);
+            --shadow-card: 0 1px 2px rgba(0,0,0,.45), 0 14px 32px -14px rgba(0,0,0,.6);
+            --shadow-card-hover: 0 1px 2px rgba(0,0,0,.45), 0 28px 54px -18px rgba(0,0,0,.72), 0 0 0 1px var(--accent-soft-strong);
+            --shadow-pop: 0 22px 56px -14px rgba(0,0,0,.75), 0 0 0 1px var(--border);
         }
 
         * { box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', sans-serif; margin: 0; padding: 0; }
 
-        html { scrollbar-color: #333 transparent; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        html { scrollbar-color: #2c2d33 transparent; }
+        ::-webkit-scrollbar { width: 9px; height: 9px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #2a2a2e; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-soft-strong); }
+        ::-webkit-scrollbar-thumb { background: #2c2d33; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
 
         body {
             background:
-                radial-gradient(1200px 600px at 85% -10%, rgba(124,58,237,.10), transparent 60%),
-                radial-gradient(900px 500px at 0% 0%, rgba(124,58,237,.05), transparent 55%),
+                radial-gradient(1300px 640px at 88% -12%, rgba(124,92,250,.11), transparent 60%),
+                radial-gradient(950px 520px at -3% -3%, rgba(124,92,250,.06), transparent 55%),
                 var(--bg);
             color: var(--text);
-            padding: 2.5rem clamp(1.25rem, 4vw, 3rem);
+            padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 3.5rem;
             min-height: 100vh;
             letter-spacing: .1px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+        :focus-visible { outline: 2px solid var(--accent-hover); outline-offset: 2px; border-radius: 6px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+        }
 
         /* ---------- Header ---------- */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1.25rem;
-            padding-bottom: 1.75rem; border-bottom: 1px solid var(--border-soft);
+            margin-bottom: 2.6rem; flex-wrap: wrap; gap: 1.25rem;
+            padding-bottom: 1.85rem; border-bottom: 1px solid var(--border-soft);
         }
         .header-titles { display: flex; flex-direction: column; gap: .35rem; }
         .header h1 {
-            color: var(--text); font-size: 1.6rem; font-weight: 800; letter-spacing: -.2px;
-            display: flex; align-items: center; gap: .65rem;
+            color: var(--text); font-size: 1.65rem; font-weight: 800; letter-spacing: -.3px;
+            display: flex; align-items: center; gap: .7rem;
         }
         .header h1::before {
             content: ''; width: 9px; height: 9px; border-radius: 50%;
-            background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft), 0 0 16px rgba(124,58,237,.6);
+            background: var(--accent-hover); box-shadow: 0 0 0 4px var(--accent-soft), 0 0 18px rgba(124,92,250,.65);
         }
-        .header-sub { color: var(--text-dim); font-size: .85rem; font-weight: 500; }
+        .header-sub { color: var(--text-dim); font-size: .86rem; font-weight: 500; }
         .header-actions { display: flex; gap: .7rem; flex-wrap: wrap; }
 
         .btn-purple, .btn-back, .btn-secondary, .btn-primary {
             display: inline-flex; align-items: center; gap: .5rem;
-            border: none; padding: .68rem 1.35rem; border-radius: var(--radius-sm);
+            border: none; padding: .7rem 1.4rem; border-radius: var(--radius-xs);
             cursor: pointer; font-size: .88rem; font-weight: 700;
             transition: transform .18s var(--ease), background-color .18s var(--ease), box-shadow .18s var(--ease), filter .18s var(--ease);
             white-space: nowrap;
@@ -82,22 +89,22 @@
 
         .btn-purple, .btn-primary {
             background: linear-gradient(180deg, var(--accent-hover), var(--accent));
-            color: #fff; box-shadow: 0 1px 0 rgba(255,255,255,.08) inset, 0 8px 20px -6px rgba(124,58,237,.55);
+            color: #fff; box-shadow: 0 1px 0 rgba(255,255,255,.1) inset, 0 10px 22px -6px rgba(124,92,250,.6);
         }
-        .btn-purple:hover, .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.1) inset, 0 12px 26px -6px rgba(124,58,237,.65); }
+        .btn-purple:hover, .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.12) inset, 0 14px 28px -6px rgba(124,92,250,.7); }
         .btn-purple:active, .btn-primary:active { transform: translateY(0); filter: brightness(.97); }
 
         .btn-back, .btn-secondary {
             background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
         }
-        .btn-back:hover, .btn-secondary:hover { background: var(--surface-3); border-color: rgba(255,255,255,.14); transform: translateY(-1px); }
+        .btn-back:hover, .btn-secondary:hover { background: var(--surface-3); border-color: rgba(255,255,255,.16); transform: translateY(-1px); }
         .btn-back:active, .btn-secondary:active { transform: translateY(0); }
 
         /* ---------- Grid / Cards ---------- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(264px, 1fr)); gap: 1.5rem; }
 
         .card {
-            background: linear-gradient(180deg, #171719, var(--surface));
+            background: linear-gradient(180deg, #18181c, var(--surface));
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 1.1rem;
@@ -106,31 +113,36 @@
             transition: transform .28s var(--ease), box-shadow .28s var(--ease), border-color .28s var(--ease);
             overflow: hidden;
         }
-        .card:hover { border-color: rgba(124,58,237,.35); transform: translateY(-5px); box-shadow: var(--shadow-card-hover); }
-
-        .card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: .75rem; }
-
-        .card-image {
-            width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius-md);
-            margin-bottom: .95rem; background: linear-gradient(135deg, #1c1c20, #141416);
-            display: block; transition: transform .5s var(--ease);
+        .card::before {
+            content: ''; position: absolute; inset: 0 0 auto 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
         }
-        .card:hover .card-image { transform: scale(1.035); }
+        .card:hover { border-color: rgba(124,92,250,.38); transform: translateY(-5px); box-shadow: var(--shadow-card-hover); }
+
+        .card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: .8rem; }
+
+        .card-image-wrap { position: relative; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem; }
+        .card-image {
+            width: 100%; height: 152px; object-fit: cover; display: block;
+            background: linear-gradient(135deg, #1e1e23, #141416);
+            transition: transform .5s var(--ease);
+        }
+        .card:hover .card-image { transform: scale(1.045); }
 
         .card-title {
-            font-size: 1rem; font-weight: 700; margin-bottom: .3rem; color: var(--text);
+            font-size: 1rem; font-weight: 700; margin-bottom: .32rem; color: var(--text);
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
         .card-price {
-            color: var(--accent-hover); font-size: 1.15rem; font-weight: 800; letter-spacing: -.2px;
-            margin-bottom: .3rem;
+            color: var(--accent-hover); font-size: 1.18rem; font-weight: 800; letter-spacing: -.2px;
+            margin-bottom: .35rem;
         }
-        .card-meta { color: var(--text-faint); font-size: .76rem; font-weight: 500; display: flex; align-items: center; gap: .35rem; }
+        .card-meta { color: var(--text-faint); font-size: .76rem; font-weight: 500; display: flex; align-items: center; gap: .4rem; }
         .card-meta::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); }
 
         /* ---------- More button / dropdown ---------- */
         .more-btn {
-            background: rgba(255,255,255,.03); border: 1px solid transparent; color: var(--text-dim);
+            background: rgba(255,255,255,.04); border: 1px solid transparent; color: var(--text-dim);
             font-size: 1.25rem; cursor: pointer; width: 30px; height: 30px; border-radius: 9px;
             line-height: 1; display: flex; align-items: center; justify-content: center;
             transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease);
@@ -138,38 +150,47 @@
         .more-btn:hover { background: var(--surface-3); color: var(--text); border-color: var(--border); }
 
         .dropdown {
-            position: absolute; left: 0; top: 2.2rem; background: #1b1b1f; border: 1px solid var(--border);
-            border-radius: var(--radius-md); display: flex; flex-direction: column; min-width: 165px; z-index: 10;
-            box-shadow: var(--shadow-pop); padding: .35rem;
+            position: absolute; left: 0; top: 2.25rem; background: #1c1c21; border: 1px solid var(--border);
+            border-radius: var(--radius-md); display: flex; flex-direction: column; min-width: 172px; z-index: 10;
+            box-shadow: var(--shadow-pop); padding: .4rem;
             opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.97);
             transition: opacity .16s var(--ease), transform .16s var(--ease), visibility .16s;
-            backdrop-filter: blur(14px);
+            backdrop-filter: blur(16px);
         }
         .dropdown.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
 
         .dropdown-item {
-            padding: .58rem .75rem; cursor: pointer; font-size: .85rem; font-weight: 500; color: #d4d4d9;
+            padding: .6rem .8rem; cursor: pointer; font-size: .85rem; font-weight: 500; color: #d6d6db;
             border-radius: 8px; transition: background-color .14s var(--ease), color .14s var(--ease);
+            display: flex; align-items: center; gap: .55rem;
         }
+        .dropdown-item svg { width: 15px; height: 15px; opacity: .85; flex-shrink: 0; }
         .dropdown-item:hover { background: var(--accent-soft); color: #fff; }
         .dropdown-item.danger { color: var(--danger); }
         .dropdown-item.danger:hover { background: var(--danger-soft); color: #ff8095; }
 
         /* ---------- Status badge ---------- */
         .status-badge {
-            padding: .3rem .7rem .3rem .8rem; border-radius: 20px; font-size: .7rem; font-weight: 700;
+            padding: .32rem .75rem .32rem .85rem; border-radius: 20px; font-size: .7rem; font-weight: 700;
             background: var(--surface-3); color: var(--text-dim); display: inline-flex; align-items: center; gap: .4rem;
             letter-spacing: .2px;
         }
         .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); }
         .status-badge.active {
-            background: var(--accent-soft); color: #c4a5fb; border: 1px solid rgba(124,58,237,.3);
+            background: var(--accent-soft); color: #cdbdff; border: 1px solid rgba(124,92,250,.32);
         }
-        .status-badge.active::before { background: var(--accent-hover); box-shadow: 0 0 8px rgba(124,58,237,.8); }
+        .status-badge.active::before { background: var(--accent-hover); box-shadow: 0 0 8px rgba(124,92,250,.85); }
+
+        /* ---------- Empty state ---------- */
+        .grid-empty {
+            grid-column: 1 / -1; text-align: center; padding: 3.5rem 1.5rem; color: var(--text-faint);
+            font-size: .9rem; font-weight: 500; background: linear-gradient(180deg, #18181c, var(--surface));
+            border: 1px dashed var(--border); border-radius: var(--radius-md);
+        }
 
         /* ---------- Modal ---------- */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(6,6,9,.72); backdrop-filter: blur(6px);
+            position: fixed; inset: 0; background: rgba(5,5,8,.74); backdrop-filter: blur(7px);
             display: flex; justify-content: center; align-items: center; z-index: 999;
             opacity: 0; visibility: hidden; transition: opacity .22s var(--ease), visibility .22s;
             padding: 1.5rem;
@@ -177,15 +198,15 @@
         .modal-overlay.active { opacity: 1; visibility: visible; }
 
         .modal-box {
-            background: linear-gradient(180deg, #17171a, var(--surface));
+            background: linear-gradient(180deg, #18181c, var(--surface));
             border: 1px solid var(--border); border-radius: var(--radius-lg);
-            padding: 1.85rem; max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto;
+            padding: 1.9rem; max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto;
             box-shadow: var(--shadow-pop);
             transform: scale(.94) translateY(10px); transition: transform .26s var(--ease);
         }
         .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
 
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4rem; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.45rem; }
         .modal-title { font-size: 1.15rem; font-weight: 800; color: var(--text); }
         .modal-close {
             background: var(--surface-2); border: 1px solid var(--border); color: var(--text-dim);
@@ -196,41 +217,41 @@
         .modal-close:hover { background: var(--danger-soft); color: #ff8095; }
 
         /* ---------- Form ---------- */
-        .form-group { margin-bottom: 1.15rem; }
+        .form-group { margin-bottom: 1.2rem; }
         .form-group label {
-            display: block; color: var(--text-dim); margin-bottom: .45rem; font-size: .78rem;
+            display: block; color: var(--text-dim); margin-bottom: .48rem; font-size: .78rem;
             font-weight: 700; letter-spacing: .3px;
         }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: .72rem .85rem; background: var(--surface-2);
-            border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: .92rem;
+            width: 100%; padding: .74rem .9rem; background: var(--surface-2);
+            border: 1px solid var(--border); border-radius: var(--radius-xs); color: #fff; font-size: .92rem;
             transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background-color .18s var(--ease);
             font-family: inherit;
         }
         .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-faint); }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            border-color: var(--accent); outline: none; background: #1c1c21;
+            border-color: var(--accent); outline: none; background: #1d1e23;
             box-shadow: 0 0 0 3px var(--accent-soft);
         }
-        .form-group textarea { resize: vertical; min-height: 64px; }
+        .form-group textarea { resize: vertical; min-height: 66px; }
 
-        .form-actions { display: flex; gap: .65rem; justify-content: flex-end; margin-top: 1.6rem; }
+        .form-actions { display: flex; gap: .65rem; justify-content: flex-end; margin-top: 1.7rem; }
 
         /* ---------- Image selector ---------- */
         .image-select-grid {
-            display: flex; flex-wrap: wrap; gap: 9px; margin-top: 10px; max-height: 175px; overflow-y: auto;
+            display: flex; flex-wrap: wrap; gap: 9px; margin-top: 10px; max-height: 178px; overflow-y: auto;
             padding: 4px;
         }
         .image-preview {
-            width: 76px; height: 76px; object-fit: cover; border-radius: var(--radius-sm);
+            width: 76px; height: 76px; object-fit: cover; border-radius: var(--radius-xs);
             cursor: pointer; border: 2px solid transparent; transition: border-color .18s var(--ease), transform .18s var(--ease), filter .18s var(--ease);
             filter: brightness(.75);
         }
-        .image-preview:hover { border-color: rgba(124,58,237,.45); transform: translateY(-2px); filter: brightness(.95); }
-        .image-preview.selected { border-color: var(--accent); filter: brightness(1); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .image-preview:hover { border-color: rgba(124,92,250,.45); transform: translateY(-2px); filter: brightness(.95); }
+        .image-preview.selected { border-color: var(--accent-hover); filter: brightness(1); box-shadow: 0 0 0 3px var(--accent-soft); }
 
         @media (max-width: 600px) {
-            body { padding: 1.5rem 1.1rem; }
+            body { padding: 1.5rem 1.1rem 2.5rem; }
             .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
             .header { align-items: flex-start; }
             .header-actions { width: 100%; }
@@ -330,6 +351,12 @@
                 const grid = document.getElementById('products-grid');
                 grid.innerHTML = '';
 
+                if (products.length === 0) {
+                    grid.innerHTML = `<div class="grid-empty">لا توجد منتجات بعد. اضغط "إضافة منتج" للبدء.</div>`;
+                    window._imagesList = images;
+                    return;
+                }
+
                 products.forEach((product, index) => {
                     const card = document.createElement('div');
                     card.className = 'card';
@@ -345,13 +372,24 @@
                             <div style="position:relative;">
                                 <button class="more-btn" onclick="toggleDropdown('${product._id || product.id}')">⋮</button>
                                 <div class="dropdown" id="dropdown-${product._id || product.id}">
-                                    <div class="dropdown-item" onclick="openEdit('${product._id || product.id}')">تعديل</div>
-                                    <div class="dropdown-item danger" onclick="deleteProduct('${product._id || product.id}')">حذف</div>
-                                    <div class="dropdown-item" onclick="rePublish('${product._id || product.id}')">إعادة نشر</div>
+                                    <div class="dropdown-item" onclick="openEdit('${product._id || product.id}')">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                                        تعديل
+                                    </div>
+                                    <div class="dropdown-item danger" onclick="deleteProduct('${product._id || product.id}')">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                        حذف
+                                    </div>
+                                    <div class="dropdown-item" onclick="rePublish('${product._id || product.id}')">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0012 4a8 8 0 108 8h-2a6 6 0 11-1.76-4.24L13 11h7V4l-2.35 2.35z"/></svg>
+                                        إعادة نشر
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <img src="${imgSrc}" class="card-image" alt="${product.name}">
+                        <div class="card-image-wrap">
+                            <img src="${imgSrc}" class="card-image" alt="${product.name}">
+                        </div>
                         <div class="card-title">${product.name}</div>
                         <div class="card-price">${product.currency || 'USD'} ${product.price}</div>
                         <div class="card-meta">آخر تحديث: ${new Date(product.lastUpdated).toLocaleTimeString()}</div>

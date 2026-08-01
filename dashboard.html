@@ -203,7 +203,7 @@
             text-overflow: ellipsis;
             line-height: 1.4;
         }
-        /* أزرار المتاجر المتعددة */
+        /* شارة المتجر */
         .admin-store-badge {
             padding: .2rem .7rem;
             border-radius: 20px;
@@ -216,14 +216,15 @@
             align-items: center;
             letter-spacing: .2px;
         }
+        /* زر نقل إلى متجر - تم ضبط المسافات والنص في JS */
         .admin-link-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
             padding: 0.5rem 1rem;
-            margin-top: 0.6rem;
-            margin-bottom: 0.4rem;
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
             border-radius: var(--radius-sm);
             background: linear-gradient(180deg, var(--accent-hover), var(--accent));
             color: #fff;
@@ -703,12 +704,14 @@
                         </div>`;
                     }
 
-                    // عرض المتاجر المتعددة
+                    // عرض المتاجر المتعددة مع مسافات بين الأزرار
                     let storesHtml = '';
                     if (product.stores && product.stores.length > 0) {
-                        storesHtml = product.stores.map(store => {
-                            return `<a href="${store.url}" target="_blank" class="admin-link-btn" style="margin-top:0.3rem; margin-bottom:0.3rem; display:inline-block; width:auto;">${store.storeId}</a>`;
+                        const storeLinks = product.stores.map(store => {
+                            return `<a href="${store.url}" target="_blank" class="admin-link-btn" style="margin-top:0.3rem; margin-bottom:0.3rem; display:inline-block; width:auto; margin-left:0.5rem;">إنتقل إلى ${store.storeId}</a>`;
                         }).join('');
+                        // حاوية لتجميع الأزرار بمسافة ثابتة بينها
+                        storesHtml = `<div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">${storeLinks}</div>`;
                     }
 
                     card.innerHTML = `
@@ -1028,4 +1031,4 @@
 
     </script>
 </body>
-                                                                  </html>
+</html>

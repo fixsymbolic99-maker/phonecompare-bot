@@ -69,16 +69,17 @@ app.get('/api/images', authMiddleware, (req, res) => {
   res.json(files);
 });
 
-// ===== تعديل المنتج (مع حفظ الرابط والمتجر) =====
+// ===== تعديل المنتج (تم إصلاح حفظ الصورة) =====
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
   const { name, price, features, image, storeId, url } = req.body;
   try {
     await dbService.connect();
     const product = await dbService.getProductById(req.params.id);
     if (!product) return res.status(404).json({ error: 'Product not found' });
-    if (name) product.name = name;
+    if (name !== undefined) product.name = name;
     if (price !== undefined) product.price = price;
     if (features !== undefined) product.features = features;
+    // إذا تم إرسال image (حتى لو فارغة) نقوم بتحديثها، وإلا نترك الصورة القديمة
     if (image !== undefined) product.image = image;
     if (storeId !== undefined) product.storeId = storeId;
     if (url !== undefined) product.url = url;
@@ -96,7 +97,7 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ===== إضافة منتج جديد (مع حفظ الرابط والمتجر) =====
+// ===== إضافة منتج جديد =====
 app.post('/api/products', authMiddleware, async (req, res) => {
   const { name, price, features, image, storeId, url } = req.body;
   try {

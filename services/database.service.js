@@ -1,15 +1,21 @@
 const mongoose = require('mongoose');
 const config = require('../config/config');
 
-// ===== تعريف الموديلات (Schemas) مع إضافة url و features بشكل صريح =====
-const productSchema = new mongoose.Schema({
+// ===== تعريف الموديلات (Schemas) =====
+const storeSchema = new mongoose.Schema({
   storeId: { type: String, required: true },
+  url: { type: String, default: '' }
+});
+
+const productSchema = new mongoose.Schema({
+  storeId: { type: String, default: 'manual' }, // سنبقيه للتوافق
+  url: { type: String, default: '' }, // سنبقيه للتوافق
+  stores: [storeSchema], // المصفوفة الجديدة
   name: { type: String, required: true },
   price: { type: Number, required: true },
   currency: { type: String, default: 'USD' },
-  url: { type: String, default: '' },      // تم التأكد من وجود الحقل
-  image: { type: String, default: '' },    // صورة Base64
-  features: { type: String, default: '' }, // مميزات
+  image: { type: String, default: '' },
+  features: { type: String, default: '' },
   lastUpdated: { type: Date, default: Date.now }
 });
 
@@ -49,6 +55,7 @@ class DatabaseService {
   }
 
   async upsertProduct(storeId, name, price, url, currency = 'USD') {
+    // هذه الدالة ستبقى للتوافق، لكننا سنعتمد على الجديدة
     await this.connect();
     let product = await Product.findOne({ storeId });
     if (product) {

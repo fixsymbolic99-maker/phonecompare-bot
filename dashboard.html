@@ -218,12 +218,10 @@
             .admin-card { padding: 1rem; }
         }
         .admin-card { background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; position: relative; box-shadow: var(--shadow-card); transition: border-color .25s var(--ease); cursor: default; }
-        /* إزالة تأثيرات التحويل أو القفز تمامًا */
         .admin-card:hover { border-color: var(--accent-soft); transform: none; box-shadow: var(--shadow-card); }
         .admin-card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: .8rem; }
         .admin-card-image-wrap { position: relative; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem; height: 152px; background: linear-gradient(135deg, #1e1e23, #141416); display: flex; align-items: center; justify-content: center; }
         .admin-card-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s var(--ease); }
-        /* صورة افتراضية (عند عدم وجود صورة) */
         .admin-card-image-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; color: var(--text-faint); }
         .admin-card-image-empty svg { width: 42px; height: 42px; fill: var(--text-faint); opacity: .6; }
         .admin-card-image-empty span { font-size: .8rem; font-weight: 600; }
@@ -235,27 +233,7 @@
         .admin-card-meta::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); }
         .admin-more-btn { background: rgba(255,255,255,.04); border: 1px solid transparent; color: var(--text-dim); font-size: 1.25rem; cursor: pointer; width: 30px; height: 30px; border-radius: 9px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease); }
         .admin-more-btn:hover { background: var(--surface-3); color: var(--text); border-color: var(--border); }
-        /* تعديل القائمة المنسدلة لفتحها داخل البطاقة بدلاً من الخروج */
-        .admin-dropdown { 
-            position: absolute; 
-            left: 0; /* تعديل: ناحية الشمال لتظهر داخل البطاقة */ 
-            right: auto; 
-            top: 2.25rem; 
-            background: #1c1c21; 
-            border: 1px solid var(--border); 
-            border-radius: var(--radius-md); 
-            display: flex; 
-            flex-direction: column; 
-            min-width: 172px; 
-            z-index: 10; 
-            box-shadow: var(--shadow-pop); 
-            padding: .4rem; 
-            opacity: 0; 
-            visibility: hidden; 
-            transform: translateY(-6px) scale(.97); 
-            transition: opacity .16s var(--ease), transform .16s var(--ease), visibility .16s; 
-            backdrop-filter: blur(16px); 
-        }
+        .admin-dropdown { position: absolute; left: 0; right: auto; top: 2.25rem; background: #1c1c21; border: 1px solid var(--border); border-radius: var(--radius-md); display: flex; flex-direction: column; min-width: 172px; z-index: 10; box-shadow: var(--shadow-pop); padding: .4rem; opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.97); transition: opacity .16s var(--ease), transform .16s var(--ease), visibility .16s; backdrop-filter: blur(16px); }
         .admin-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         .admin-dropdown-item { padding: .6rem .8rem; cursor: pointer; font-size: .85rem; font-weight: 500; color: #d6d6db; border-radius: 8px; transition: background-color .14s var(--ease), color .14s var(--ease); display: flex; align-items: center; gap: .55rem; }
         .admin-dropdown-item svg { width: 15px; height: 15px; opacity: .85; flex-shrink: 0; }
@@ -763,12 +741,14 @@
             const price = parseFloat(document.getElementById('add-price').value);
             const features = document.getElementById('add-features').value;
             try {
-                // ملاحظة: يجب إضافة مسار POST /api/products في السيرفر لكي تعمل هذه الدالة
+                // الآن السيرفر يدعم POST /api/products
                 await apiRequest(`/api/products`, 'POST', { name, price, features });
                 closeAddModal(); loadAllData();
                 addLog('تم إضافة المنتج بنجاح!', 'green');
+                alert('تم إضافة المنتج بنجاح!'); // رسالة نجاح للمستخدم
             } catch (err) {
                 addLog(`خطأ في الإضافة: ${err.message}`, 'red');
+                alert(`خطأ: ${err.message}`); // رسالة خطأ للمستخدم
             }
         });
     </script>

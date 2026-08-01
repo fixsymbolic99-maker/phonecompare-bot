@@ -13,8 +13,10 @@ const storesList = require('./config/stores');
 
 const app = express();
 
+// زيادة حجم الصور المسموح بها (لـ Base64)
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cors());
-app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 // ===== مسارات عامة =====
@@ -55,16 +57,30 @@ app.get('/api/logs', authMiddleware, async (req, res) => {
   catch (err) { res.json([]); }
 });
 
-// ===== مسارات الإدارة والصور =====
+// ===== مسارات الإدارة والصور (Base64) =====
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-app.get('/api/images', authMiddleware, (req, res) => {
-  const imagesDir = path.join(__dirname, 'images');
-  if (!fs.existsSync(imagesDir)) return res.json([]);
-  const files = fs.readdirSync(imagesDir).filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f));
-  res.json(files);
+// مسار رفع الصور (تحويلها لـ Base64 وحفظها في قاعدة البيانات)
+app.post('/api/products/upload-image', authMiddleware, async (req, res) => {
+  const { image, productId } = req.body;
+  try {
+    if (!image) return res.status(400).json({ error: 'No image provided' });
+    // التحقق من أن الصورة Base64 صحيحة
+    if (!image.startsWith('data:image')) {
+      return res.status(400).json({ error: 'Invalid image format' });
+    }
+    await dbService.connect();
+    const product = await dbService.getProductById(productId);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    product.image = image; // تخزين الصورة كنص Base64
+    await product.save();
+    res.json({ message: 'Image uploaded successfully' });
+  } catch (err) {
+    logger.error(`Error uploading image: ${err.message}`);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
@@ -90,24 +106,55 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-/* ===== المسار الجديد: إضافة منتج يدوياً ===== */
 app.post('/api/products', authMiddleware, async (req, res) => {
-  const { name, price, features, storeId } = req.body;
+  const { name, price, features, storeId, image } = req.body;
   try {
     await dbService.connect();
     const finalStoreId = storeId || 'manual';
     const newProductId = await dbService.upsertProduct(finalStoreId, name, price, '', 'USD');
-    if (features) {
-      const product = await dbService.getProductById(newProductId);
-      if (product) {
-        product.features = features;
-        await product.save();
-      }
+    const product = await dbService.getProductById(newProductId);
+    if (product) {
+      if (features) product.features = features;
+      if (image) product.image = image;
+      await product.save();
     }
     res.status(201).json({ message: 'Product added successfully', id: newProductId });
   } catch (err) {
     logger.error(`Error adding product: ${err.message}`);
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ===== نظام الحذف والتنظيف التلقائي (Cron Job) =====
+const cron = require('node-cron');
+
+// تشغيل مهمة التنظيف يومياً عند الساعة 3:00 صباحاً
+cron.schedule('0 3 * * *', async () => {
+  logger.info('Starting automatic database cleanup...');
+  try {
+    await dbService.connect();
+    // 1. حذف السجلات التاريخية الأقدم من 365 يوم
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const historyResult = await dbService.deleteHistoryOlderThan(oneYearAgo);
+    logger.info(`Cleaned ${historyResult.deletedCount} old history records.`);
+
+    // 2. حذف سجلات النظام الأقدم من 1000 سجل (حافظ على آخر 1000)
+    const logsResult = await dbService.deleteOldLogs(1000);
+    logger.info(`Cleaned ${logsResult.deletedCount} old logs.`);
+
+    // 3. حذف الصور غير المستخدمة (Base64) من المنتجات المحذوفة
+    const imageResult = await dbService.deleteOrphanImages();
+    logger.info(`Cleaned ${imageResult.deletedCount} orphan images.`);
+
+    // 4. حذف المنتجات التي ليس لها تاريخ وتم إضافتها يدوياً منذ أكثر من سنة (اختياري)
+    const productResult = await dbService.deleteOldManualProducts(oneYearAgo);
+    if (productResult) {
+      logger.info(`Cleaned ${productResult.deletedCount} old manual products.`);
+    }
+
+  } catch (err) {
+    logger.error(`Cleanup job failed: ${err.message}`);
   }
 });
 
@@ -118,4 +165,4 @@ module.exports = app;
 if (require.main === module) {
   const PORT = config.PORT || 3000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-}
+                                               }

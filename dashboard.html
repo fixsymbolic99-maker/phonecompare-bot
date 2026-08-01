@@ -203,17 +203,18 @@
             text-overflow: ellipsis;
             line-height: 1.4;
         }
+        /* شارة المتجر (بنفسجي خفيف مثل مقارن) */
         .admin-store-badge {
             padding: .2rem .7rem;
             border-radius: 20px;
             font-size: .65rem;
             font-weight: 700;
-            background: var(--surface-3);
-            color: var(--text-dim);
+            background: var(--accent-soft);
+            color: #cdbdff;
+            border: 1px solid rgba(124,92,250,.32);
             display: inline-flex;
             align-items: center;
             letter-spacing: .2px;
-            margin-right: 0.4rem;
         }
         .admin-more-btn { background: rgba(255,255,255,.04); border: 1px solid transparent; color: var(--text-dim); font-size: 1.25rem; cursor: pointer; width: 30px; height: 30px; border-radius: 9px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease); }
         .admin-more-btn:hover { background: var(--surface-3); color: var(--text); border-color: var(--border); }
@@ -381,6 +382,17 @@
             <div style="padding: 1rem 0; color: var(--success); font-size: 1.1rem; text-align: center;" id="success-message">...</div>
             <div class="form-actions">
                 <button type="button" class="btn-primary" onclick="closeSuccessModal()">موافق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال الرسائل (لأخطاء النظام والتنبيهات) -->
+    <div id="message-modal" class="modal-overlay" style="z-index: 1150;">
+        <div class="modal-box">
+            <div class="modal-header"><span class="modal-title" id="message-title">تنبيه</span><button class="modal-close" onclick="closeMessageModal()">✕</button></div>
+            <div style="padding: 1rem 0; color: var(--text); font-size: 1rem; text-align: center;" id="message-content">...</div>
+            <div class="form-actions">
+                <button type="button" class="btn-primary" onclick="closeMessageModal()">موافق</button>
             </div>
         </div>
     </div>
@@ -607,22 +619,23 @@
                 loadAdminProducts();
             } catch (err) {
                 addLog(`خطأ: ${err.message}`, 'red');
-                alert(`حدث خطأ أثناء تحميل البيانات: ${err.message}`);
+                // استخدام مودال بدلاً من alert
+                openMessageModal('خطأ', `حدث خطأ أثناء تحميل البيانات: ${err.message}`);
             }
         }
 
         startAllBtn.addEventListener('click', async () => {
             try { await apiRequest('/api/proxy/start-all', 'POST'); addLog('تم تشغيل الكل.', 'green'); loadAllData(); }
-            catch (err) { addLog(`خطأ: ${err.message}`, 'red'); }
+            catch (err) { addLog(`خطأ: ${err.message}`, 'red'); openMessageModal('خطأ', err.message); }
         });
         stopAllBtn.addEventListener('click', async () => {
             try { await apiRequest('/api/proxy/stop-all', 'POST'); addLog('تم إيقاف الكل.', 'yellow'); loadAllData(); }
-            catch (err) { addLog(`خطأ: ${err.message}`, 'red'); }
+            catch (err) { addLog(`خطأ: ${err.message}`, 'red'); openMessageModal('خطأ', err.message); }
         });
         startStoreBtn.addEventListener('click', async () => {
             const storeId = storeSelect.value; if (!storeId) return;
             try { await apiRequest(`/api/proxy/start/${storeId}`, 'POST'); addLog(`تشغيل ${storeId}`, 'green'); loadAllData(); }
-            catch (err) { addLog(`خطأ: ${err.message}`, 'red'); }
+            catch (err) { addLog(`خطأ: ${err.message}`, 'red'); openMessageModal('خطأ', err.message); }
         });
         refreshStatusBtn.addEventListener('click', loadAllData);
         setInterval(loadAllData, 15000);
@@ -652,15 +665,12 @@
                         </div>`;
                     }
 
-                    // عرض المتجر في الكارت (بدون النقطة)
-                    const storeDisplay = product.storeId ? `<span class="admin-store-badge">${product.storeId}</span>` : '';
+                    // عرض المتجر في الكارت (فوق العنوان وبلون بنفسجي)
+                    const storeDisplay = product.storeId ? `<div class="admin-store-badge" style="margin-bottom: 0.3rem; display: inline-block;">${product.storeId}</div>` : '';
 
                     card.innerHTML = `
                         <div class="admin-card-top">
-                            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                                <span class="admin-status-badge active">مقارن</span>
-                                ${storeDisplay}
-                            </div>
+                            <span class="admin-status-badge active">مقارن</span>
                             <div style="position:relative;">
                                 <button class="admin-more-btn" onclick="toggleAdminDropdown('${product._id || product.id}')">⋮</button>
                                 <div class="admin-dropdown" id="admin-dropdown-${product._id || product.id}">
@@ -671,6 +681,7 @@
                             </div>
                         </div>
                         ${imageHtml}
+                        ${storeDisplay}
                         <div class="admin-card-title">${product.name}</div>
                         <div class="admin-card-price">${product.currency || 'USD'} ${product.price}</div>
                         <div class="admin-card-features">${product.features || ''}</div>
@@ -682,7 +693,7 @@
             } catch (err) {
                 console.error(err);
                 addLog(`خطأ في تحميل إدارة المنتجات: ${err.message}`, 'red');
-                alert(`فشل تحميل المنتجات: ${err.message}`);
+                openMessageModal('خطأ', `فشل تحميل المنتجات: ${err.message}`);
             }
         }
 
@@ -738,7 +749,7 @@
                 openSuccessModal('تم تحديث المنتج بنجاح!');
             } catch (err) {
                 addLog(`خطأ في الحفظ: ${err.message}`, 'red');
-                alert(`خطأ: ${err.message}`);
+                openMessageModal('خطأ', `خطأ في الحفظ: ${err.message}`);
             }
         });
 
@@ -754,7 +765,7 @@
                         openSuccessModal('تم حذف المنتج.');
                     } catch (err) {
                         addLog(`خطأ في الحذف: ${err.message}`, 'red');
-                        alert(`خطأ: ${err.message}`);
+                        openMessageModal('خطأ', `خطأ في الحذف: ${err.message}`);
                     }
                 }
             );
@@ -765,10 +776,10 @@
             try {
                 await apiRequest(store ? `/api/proxy/start/${store}` : '/api/proxy/start-all', 'POST');
                 addLog('تم بدء الزحف.', 'green');
-                alert('تم بدء الزحف');
+                openSuccessModal('تم بدء الزحف');
             } catch (err) {
                 addLog(`خطأ في إعادة النشر: ${err.message}`, 'red');
-                alert(`خطأ: ${err.message}`);
+                openMessageModal('خطأ', `خطأ في إعادة النشر: ${err.message}`);
             }
         }
 
@@ -817,6 +828,16 @@
 
         function closeSuccessModal() {
             document.getElementById('success-modal').classList.remove('active');
+        }
+
+        function openMessageModal(title, message) {
+            document.getElementById('message-title').textContent = title || 'تنبيه';
+            document.getElementById('message-content').textContent = message || 'حدث خطأ ما.';
+            document.getElementById('message-modal').classList.add('active');
+        }
+
+        function closeMessageModal() {
+            document.getElementById('message-modal').classList.remove('active');
         }
 
         function openConfirmModal(title, message, onConfirm) {
@@ -885,7 +906,7 @@
                         openSuccessModal('تم إضافة المنتج بنجاح!');
                     } catch (err) {
                         addLog(`خطأ في الإضافة: ${err.message}`, 'red');
-                        alert(`خطأ: ${err.message}`);
+                        openMessageModal('خطأ', `خطأ في الإضافة: ${err.message}`);
                     }
                 }
             );
@@ -899,6 +920,10 @@
             if (e.target === e.currentTarget) closeSuccessModal();
         });
 
+        document.getElementById('message-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeMessageModal();
+        });
+
     </script>
 </body>
-    </html>
+                                                                         </html>

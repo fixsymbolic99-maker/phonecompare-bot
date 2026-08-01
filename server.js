@@ -57,12 +57,11 @@ app.get('/api/logs', authMiddleware, async (req, res) => {
   catch (err) { res.json([]); }
 });
 
-// ===== مسارات الإدارة والصور (Base64) =====
+// ===== مسارات الإدارة والصور =====
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-/* إصلاح مسار الصور (حل مشكلة 404) */
 app.get('/api/images', authMiddleware, (req, res) => {
   const imagesDir = path.join(__dirname, 'images');
   if (!fs.existsSync(imagesDir)) return res.json([]);
@@ -70,21 +69,25 @@ app.get('/api/images', authMiddleware, (req, res) => {
   res.json(files);
 });
 
+// ===== تعديل المنتج (مع حفظ الرابط والمتجر) =====
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
-  const { name, price, features, image } = req.body;
+  const { name, price, features, image, storeId, url } = req.body;
   try {
     await dbService.connect();
     const product = await dbService.getProductById(req.params.id);
     if (!product) return res.status(404).json({ error: 'Product not found' });
     if (name) product.name = name;
     if (price !== undefined) product.price = price;
-    if (features) product.features = features;
-    if (image) product.image = image;
+    if (features !== undefined) product.features = features;
+    if (image !== undefined) product.image = image;
+    if (storeId !== undefined) product.storeId = storeId;
+    if (url !== undefined) product.url = url;
     await product.save();
     res.json({ message: 'Product updated' });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ===== حذف منتج =====
 app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   try {
     await dbService.connect();
@@ -93,8 +96,9 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ===== إضافة منتج جديد (مع حفظ الرابط والمتجر) =====
 app.post('/api/products', authMiddleware, async (req, res) => {
-  const { name, price, features, storeId, image } = req.body;
+  const { name, price, features, image, storeId, url } = req.body;
   try {
     await dbService.connect();
     const finalStoreId = storeId || 'manual';
@@ -103,6 +107,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
     if (product) {
       if (features) product.features = features;
       if (image) product.image = image;
+      if (url !== undefined) product.url = url;
       await product.save();
     }
     res.status(201).json({ message: 'Product added successfully', id: newProductId });
@@ -112,9 +117,8 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-// ===== نظام الحذف والتنظيف التلقائي (Cron Job) =====
+// ===== نظام الحذف والتنظيف التلقائي =====
 const cron = require('node-cron');
-
 cron.schedule('0 3 * * *', async () => {
   logger.info('Starting automatic database cleanup...');
   try {

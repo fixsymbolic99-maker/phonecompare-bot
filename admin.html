@@ -42,6 +42,7 @@
         ::-webkit-scrollbar-thumb { background: #2c2d33; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
 
+        html, body { max-width: 100%; overflow-x: hidden; }
         body {
             background:
                 radial-gradient(1300px 640px at 88% -12%, rgba(124,92,250,.11), transparent 60%),
@@ -101,7 +102,10 @@
         .btn-back:active, .btn-secondary:active { transform: translateY(0); }
 
         /* ---------- Grid / Cards ---------- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(264px, 1fr)); gap: 1.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(264px, 1fr)); gap: 1.5rem; width: 100%; }
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+        }
 
         .card {
             background: linear-gradient(180deg, #18181c, var(--surface));
@@ -135,9 +139,10 @@
         }
         .card-price {
             color: var(--accent-hover); font-size: 1.18rem; font-weight: 800; letter-spacing: -.2px;
-            margin-bottom: .35rem;
+            margin-bottom: .35rem; unicode-bidi: isolate; direction: ltr; text-align: right;
         }
         .card-meta { color: var(--text-faint); font-size: .76rem; font-weight: 500; display: flex; align-items: center; gap: .4rem; }
+        .card-meta span { unicode-bidi: isolate; direction: ltr; }
         .card-meta::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); }
 
         /* ---------- More button / dropdown ---------- */
@@ -392,7 +397,7 @@
                         </div>
                         <div class="card-title">${product.name}</div>
                         <div class="card-price">${product.currency || 'USD'} ${product.price}</div>
-                        <div class="card-meta">آخر تحديث: ${new Date(product.lastUpdated).toLocaleTimeString()}</div>
+                        <div class="card-meta">آخر تحديث: <span>${new Date(product.lastUpdated).toLocaleTimeString()}</span></div>
                     `;
                     grid.appendChild(card);
                 });

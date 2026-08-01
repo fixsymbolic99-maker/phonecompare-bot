@@ -5,66 +5,254 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إدارة المنتجات</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        body { background: #0a0a0f; color: #e0e0e0; padding: 2rem; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-        .header h1 { color: #7c3aed; }
-        .btn-purple { background: #7c3aed; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .btn-purple:hover { background: #6d28d9; }
-        .btn-back { background: #333; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .btn-back:hover { background: #444; }
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap');
 
+        :root {
+            --bg: #0a0a0f;
+            --surface: #141414;
+            --surface-2: #1a1a1a;
+            --surface-3: #1f1f22;
+            --border: rgba(255,255,255,.07);
+            --border-soft: rgba(255,255,255,.04);
+            --accent: #7c3aed;
+            --accent-hover: #8f5cf5;
+            --accent-soft: rgba(124,58,237,.12);
+            --accent-soft-strong: rgba(124,58,237,.22);
+            --text: #f2f2f5;
+            --text-dim: #9a9aa5;
+            --text-faint: #67676f;
+            --danger: #f8536b;
+            --danger-soft: rgba(248,83,107,.12);
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --ease: cubic-bezier(.22,1,.36,1);
+            --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 28px -12px rgba(0,0,0,.55);
+            --shadow-card-hover: 0 1px 2px rgba(0,0,0,.4), 0 24px 48px -16px rgba(0,0,0,.7), 0 0 0 1px var(--accent-soft-strong);
+            --shadow-pop: 0 20px 50px -12px rgba(0,0,0,.7), 0 0 0 1px var(--border);
+        }
+
+        * { box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+
+        html { scrollbar-color: #333 transparent; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2e; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-soft-strong); }
+
+        body {
+            background:
+                radial-gradient(1200px 600px at 85% -10%, rgba(124,58,237,.10), transparent 60%),
+                radial-gradient(900px 500px at 0% 0%, rgba(124,58,237,.05), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            padding: 2.5rem clamp(1.25rem, 4vw, 3rem);
+            min-height: 100vh;
+            letter-spacing: .1px;
+        }
+
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+        /* ---------- Header ---------- */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1.25rem;
+            padding-bottom: 1.75rem; border-bottom: 1px solid var(--border-soft);
+        }
+        .header-titles { display: flex; flex-direction: column; gap: .35rem; }
+        .header h1 {
+            color: var(--text); font-size: 1.6rem; font-weight: 800; letter-spacing: -.2px;
+            display: flex; align-items: center; gap: .65rem;
+        }
+        .header h1::before {
+            content: ''; width: 9px; height: 9px; border-radius: 50%;
+            background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft), 0 0 16px rgba(124,58,237,.6);
+        }
+        .header-sub { color: var(--text-dim); font-size: .85rem; font-weight: 500; }
+        .header-actions { display: flex; gap: .7rem; flex-wrap: wrap; }
+
+        .btn-purple, .btn-back, .btn-secondary, .btn-primary {
+            display: inline-flex; align-items: center; gap: .5rem;
+            border: none; padding: .68rem 1.35rem; border-radius: var(--radius-sm);
+            cursor: pointer; font-size: .88rem; font-weight: 700;
+            transition: transform .18s var(--ease), background-color .18s var(--ease), box-shadow .18s var(--ease), filter .18s var(--ease);
+            white-space: nowrap;
+        }
+        .btn-purple svg, .btn-back svg, .btn-secondary svg, .btn-primary svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+        .btn-purple, .btn-primary {
+            background: linear-gradient(180deg, var(--accent-hover), var(--accent));
+            color: #fff; box-shadow: 0 1px 0 rgba(255,255,255,.08) inset, 0 8px 20px -6px rgba(124,58,237,.55);
+        }
+        .btn-purple:hover, .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.1) inset, 0 12px 26px -6px rgba(124,58,237,.65); }
+        .btn-purple:active, .btn-primary:active { transform: translateY(0); filter: brightness(.97); }
+
+        .btn-back, .btn-secondary {
+            background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+        }
+        .btn-back:hover, .btn-secondary:hover { background: var(--surface-3); border-color: rgba(255,255,255,.14); transform: translateY(-1px); }
+        .btn-back:active, .btn-secondary:active { transform: translateY(0); }
+
+        /* ---------- Grid / Cards ---------- */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
-        .card { background: #141414; border: 1px solid #222; border-radius: 16px; padding: 1rem; position: relative; transition: 0.2s; }
-        .card:hover { border-color: #7c3aed40; }
-        
-        .card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; }
-        .card-image { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 0.8rem; background: #222; }
-        .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
-        .card-price { color: #7c3aed; font-size: 1.1rem; font-weight: bold; }
-        .card-meta { color: #888; font-size: 0.8rem; }
 
-        .more-btn { background: transparent; border: none; color: #888; font-size: 1.5rem; cursor: pointer; padding: 0 4px; line-height: 1; }
-        .dropdown { position: absolute; right: 0; top: 2rem; background: #1f1f1f; border: 1px solid #333; border-radius: 8px; display: none; flex-direction: column; min-width: 150px; z-index: 10; }
-        .dropdown.active { display: flex; }
-        .dropdown-item { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.9rem; color: #ccc; transition: 0.1s; border-bottom: 1px solid #2a2a2a; }
-        .dropdown-item:last-child { border-bottom: none; }
-        .dropdown-item:hover { background: #333; color: #fff; }
-        .dropdown-item.danger { color: #ff4444; }
+        .card {
+            background: linear-gradient(180deg, #171719, var(--surface));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.1rem;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            transition: transform .28s var(--ease), box-shadow .28s var(--ease), border-color .28s var(--ease);
+            overflow: hidden;
+        }
+        .card:hover { border-color: rgba(124,58,237,.35); transform: translateY(-5px); box-shadow: var(--shadow-card-hover); }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 999; }
-        .modal-overlay.active { display: flex; }
-        .modal-box { background: #141414; border: 1px solid #333; border-radius: 16px; padding: 2rem; max-width: 450px; width: 90%; max-height: 90vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-        .modal-title { font-size: 1.2rem; font-weight: 600; }
-        .modal-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
-        
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; color: #888; margin-bottom: 0.3rem; font-size: 0.9rem; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.95rem; }
-        .form-group input:focus, .form-group textarea:focus { border-color: #7c3aed; outline: none; }
-        .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem; }
-        .btn-secondary { background: #333; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; }
-        .btn-primary { background: #7c3aed; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; }
+        .card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: .75rem; }
 
-        .image-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin: 4px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
-        .image-preview:hover { border-color: #7c3aed60; }
-        .image-preview.selected { border-color: #7c3aed; }
-        .image-select-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; max-height: 150px; overflow-y: auto; }
+        .card-image {
+            width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius-md);
+            margin-bottom: .95rem; background: linear-gradient(135deg, #1c1c20, #141416);
+            display: block; transition: transform .5s var(--ease);
+        }
+        .card:hover .card-image { transform: scale(1.035); }
 
-        .status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; background: #1f1f1f; color: #888; }
-        .status-badge.active { background: #7c3aed20; color: #7c3aed; border: 1px solid #7c3aed40; }
+        .card-title {
+            font-size: 1rem; font-weight: 700; margin-bottom: .3rem; color: var(--text);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .card-price {
+            color: var(--accent-hover); font-size: 1.15rem; font-weight: 800; letter-spacing: -.2px;
+            margin-bottom: .3rem;
+        }
+        .card-meta { color: var(--text-faint); font-size: .76rem; font-weight: 500; display: flex; align-items: center; gap: .35rem; }
+        .card-meta::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); }
 
-        @media (max-width: 600px) { body { padding: 1rem; } .grid { grid-template-columns: 1fr; } }
+        /* ---------- More button / dropdown ---------- */
+        .more-btn {
+            background: rgba(255,255,255,.03); border: 1px solid transparent; color: var(--text-dim);
+            font-size: 1.25rem; cursor: pointer; width: 30px; height: 30px; border-radius: 9px;
+            line-height: 1; display: flex; align-items: center; justify-content: center;
+            transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease);
+        }
+        .more-btn:hover { background: var(--surface-3); color: var(--text); border-color: var(--border); }
+
+        .dropdown {
+            position: absolute; left: 0; top: 2.2rem; background: #1b1b1f; border: 1px solid var(--border);
+            border-radius: var(--radius-md); display: flex; flex-direction: column; min-width: 165px; z-index: 10;
+            box-shadow: var(--shadow-pop); padding: .35rem;
+            opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.97);
+            transition: opacity .16s var(--ease), transform .16s var(--ease), visibility .16s;
+            backdrop-filter: blur(14px);
+        }
+        .dropdown.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+        .dropdown-item {
+            padding: .58rem .75rem; cursor: pointer; font-size: .85rem; font-weight: 500; color: #d4d4d9;
+            border-radius: 8px; transition: background-color .14s var(--ease), color .14s var(--ease);
+        }
+        .dropdown-item:hover { background: var(--accent-soft); color: #fff; }
+        .dropdown-item.danger { color: var(--danger); }
+        .dropdown-item.danger:hover { background: var(--danger-soft); color: #ff8095; }
+
+        /* ---------- Status badge ---------- */
+        .status-badge {
+            padding: .3rem .7rem .3rem .8rem; border-radius: 20px; font-size: .7rem; font-weight: 700;
+            background: var(--surface-3); color: var(--text-dim); display: inline-flex; align-items: center; gap: .4rem;
+            letter-spacing: .2px;
+        }
+        .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); }
+        .status-badge.active {
+            background: var(--accent-soft); color: #c4a5fb; border: 1px solid rgba(124,58,237,.3);
+        }
+        .status-badge.active::before { background: var(--accent-hover); box-shadow: 0 0 8px rgba(124,58,237,.8); }
+
+        /* ---------- Modal ---------- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(6,6,9,.72); backdrop-filter: blur(6px);
+            display: flex; justify-content: center; align-items: center; z-index: 999;
+            opacity: 0; visibility: hidden; transition: opacity .22s var(--ease), visibility .22s;
+            padding: 1.5rem;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal-box {
+            background: linear-gradient(180deg, #17171a, var(--surface));
+            border: 1px solid var(--border); border-radius: var(--radius-lg);
+            padding: 1.85rem; max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto;
+            box-shadow: var(--shadow-pop);
+            transform: scale(.94) translateY(10px); transition: transform .26s var(--ease);
+        }
+        .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4rem; }
+        .modal-title { font-size: 1.15rem; font-weight: 800; color: var(--text); }
+        .modal-close {
+            background: var(--surface-2); border: 1px solid var(--border); color: var(--text-dim);
+            font-size: 1.1rem; width: 32px; height: 32px; border-radius: 9px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; line-height: 1;
+            transition: background-color .16s var(--ease), color .16s var(--ease);
+        }
+        .modal-close:hover { background: var(--danger-soft); color: #ff8095; }
+
+        /* ---------- Form ---------- */
+        .form-group { margin-bottom: 1.15rem; }
+        .form-group label {
+            display: block; color: var(--text-dim); margin-bottom: .45rem; font-size: .78rem;
+            font-weight: 700; letter-spacing: .3px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: .72rem .85rem; background: var(--surface-2);
+            border: 1px solid var(--border); border-radius: var(--radius-sm); color: #fff; font-size: .92rem;
+            transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background-color .18s var(--ease);
+            font-family: inherit;
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-faint); }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--accent); outline: none; background: #1c1c21;
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+        .form-group textarea { resize: vertical; min-height: 64px; }
+
+        .form-actions { display: flex; gap: .65rem; justify-content: flex-end; margin-top: 1.6rem; }
+
+        /* ---------- Image selector ---------- */
+        .image-select-grid {
+            display: flex; flex-wrap: wrap; gap: 9px; margin-top: 10px; max-height: 175px; overflow-y: auto;
+            padding: 4px;
+        }
+        .image-preview {
+            width: 76px; height: 76px; object-fit: cover; border-radius: var(--radius-sm);
+            cursor: pointer; border: 2px solid transparent; transition: border-color .18s var(--ease), transform .18s var(--ease), filter .18s var(--ease);
+            filter: brightness(.75);
+        }
+        .image-preview:hover { border-color: rgba(124,58,237,.45); transform: translateY(-2px); filter: brightness(.95); }
+        .image-preview.selected { border-color: var(--accent); filter: brightness(1); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+        @media (max-width: 600px) {
+            body { padding: 1.5rem 1.1rem; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+            .header { align-items: flex-start; }
+            .header-actions { width: 100%; }
+            .header-actions .btn-back, .header-actions .btn-purple { flex: 1; justify-content: center; }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>إدارة المنتجات</h1>
-        <div>
-            <button class="btn-back" onclick="window.location.href='/'">الرئيسية</button>
-            <button class="btn-purple" onclick="alert('ستضيف هنا منتج جديد لاحقاً')">إضافة منتج</button>
+        <div class="header-titles">
+            <h1>إدارة المنتجات</h1>
+            <span class="header-sub">عرض وتحديث المنتجات المقارنة والمزامنة مع المتاجر</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn-back" onclick="window.location.href='/'">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                الرئيسية
+            </button>
+            <button class="btn-purple" onclick="alert('ستضيف هنا منتج جديد لاحقاً')">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
+                إضافة منتج
+            </button>
         </div>
     </div>
     <div id="products-grid" class="grid"></div>
@@ -73,7 +261,7 @@
         <div class="modal-box">
             <div class="modal-header">
                 <span class="modal-title">تعديل المنتج</span>
-                <button class="modal-close" onclick="closeModal()">x</button>
+                <button class="modal-close" onclick="closeModal()">✕</button>
             </div>
             <form id="edit-form">
                 <input type="hidden" id="edit-id">
@@ -92,7 +280,7 @@
                 <div class="form-group">
                     <label>اختر صورة</label>
                     <div id="image-selector" class="image-select-grid"></div>
-                    <small style="color:#666; display:block; margin-top:5px;">انقر على الصورة لاختيارها (يجب رفعها مسبقاً على GitHub).</small>
+                    <small style="color:var(--text-faint); display:block; margin-top:8px; font-size:.74rem;">انقر على الصورة لاختيارها (يجب رفعها مسبقاً على GitHub).</small>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" onclick="closeModal()">إلغاء</button>

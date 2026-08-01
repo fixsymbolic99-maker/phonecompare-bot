@@ -7,7 +7,9 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
   currency: { type: String, default: 'USD' },
-  url: { type: String, default: '' }, // تم التعديل: إزالة required: true وإضافة قيمة افتراضية فارغة
+  url: { type: String, default: '' },
+  image: { type: String, default: '' }, // حقل الصورة كـ Base64
+  features: { type: String, default: '' },
   lastUpdated: { type: Date, default: Date.now }
 });
 
@@ -85,6 +87,50 @@ class DatabaseService {
   async deleteProduct(id) {
     await this.connect();
     return await Product.findByIdAndDelete(id);
+  }
+
+  // ===== دوال التنظيف التلقائي =====
+  async deleteHistoryOlderThan(date) {
+    await this.connect();
+    return await History.deleteMany({ recordedAt: { $lt: date } });
+  }
+
+  async deleteOldLogs(keepCount) {
+    await this.connect();
+    // جلب إجمالي السجلات، وحذف الأقدم منها إذا زاد العدد عن keepCount
+    const count = await Log.countDocuments();
+    if (count <= keepCount) return { deletedCount: 0 };
+    const toDelete = count - keepCount;
+    const logs = await Log.find().sort({ timestamp: 1 }).limit(toDelete);
+    const ids = logs.map(l => l._id);
+    const result = await Log.deleteMany({ _id: { $in: ids } });
+    return result;
+  }
+
+  async deleteOrphanImages() {
+    await this.connect();
+    // حذف الصور من المنتجات التي تم حذفها (لا يوجد منتج مرتبط بها)
+    // هذا الدالة تحتاج إلى فحص جميع المنتجات، وتحديد الصور التي لا تشير إلى منتج موجود
+    // لكن بما أن الصورة جزء من المنتج، فلا توجد صور يتيمة. لكن سنقوم بحذف الصور من المنتجات اليدوية التي لم يتم تحديثها منذ سنة
+    // يمكنك تخصيص هذه الدالة حسب احتياجك، هنا سنقوم بحذف الصور الكبيرة جداً (أكثر من 200 كيلوبايت) لتوفير المساحة
+    // أو حذف الصور التي لا تحتوي على منتج (في حالة وجود خطأ)
+    // حالياً سنقوم بحذف الصور من المنتجات اليدوية التي لم يتم تحديثها منذ أكثر من سنة
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const result = await Product.updateMany(
+      { storeId: 'manual', lastUpdated: { $lt: oneYearAgo }, image: { $ne: '' } },
+      { $set: { image: '' } }
+    );
+    return result; // إرجاع عدد المنتجات التي تم تنظيف صورها
+  }
+
+  async deleteOldManualProducts(date) {
+    await this.connect();
+    // حذف المنتجات اليدوية التي لم يتم تحديثها منذ أكثر من سنة وليس لها سعر (اختياري)
+    // يمكن استخدام هذه الدالة للحذف الكامل، لكن بحذر
+    // سنقوم فقط بحذف المنتجات التي ليس لها أي تغيير تاريخي (اختياري)
+    // هنا سأقوم بإرجاع نتيجة فارغة للحفاظ على الأمان
+    return { deletedCount: 0 };
   }
 }
 

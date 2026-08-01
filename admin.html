@@ -106,8 +106,10 @@
         const BACKEND_URL = window.location.origin;
         let token = localStorage.getItem('token');
 
-        // إذا التوكن غير موجود أو فاضي، نرجعه للصفحة الرئيسية
+        // إذا التوكن غير موجود أو فاضي، امسحه واطلب تسجيل الدخول
         if (!token || token.trim() === '') {
+            localStorage.removeItem('token');
+            alert('انتهت صلاحية الجلسة، يرجى تسجيل الدخول من جديد.');
             window.location.href = '/';
         }
 
@@ -121,9 +123,9 @@
             
             const res = await fetch(`${BACKEND_URL}${endpoint}`, options);
             
-            // إذا رجع السيرفر 401 (توكن غير صالح)، نمسحه ونرجع للصفحة الرئيسية
             if (res.status === 401) {
                 localStorage.removeItem('token');
+                alert('انتهت صلاحية الجلسة، يرجى تسجيل الدخول من جديد.');
                 window.location.href = '/';
                 return;
             }
@@ -170,7 +172,6 @@
                 });
                 window._imagesList = images;
             } catch (err) {
-                // لو حصل خطأ، بنعرضه للمستخدم لكن منقفلش الصفحة
                 console.error(err);
                 alert('فشل تحميل البيانات: ' + err.message);
             }

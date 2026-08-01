@@ -54,6 +54,7 @@
             *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
         }
 
+        html { max-width: 100%; overflow-x: hidden; }
         body {
             background:
                 radial-gradient(1200px 620px at 92% -12%, rgba(124,92,250,.11), transparent 60%),
@@ -61,7 +62,7 @@
                 radial-gradient(700px 500px at 50% 110%, rgba(87,164,255,.045), transparent 60%),
                 var(--bg);
             color: var(--text);
-            display: flex; min-height: 100vh; overflow-x: hidden;
+            display: flex; min-height: 100vh; overflow-x: hidden; max-width: 100%;
             letter-spacing: .1px;
             -webkit-font-smoothing: antialiased;
         }
@@ -124,6 +125,7 @@
             box-shadow: 0 12px 26px -8px rgba(124,92,250,.6), 0 1px 0 rgba(255,255,255,.12) inset;
             display: flex; align-items: center; justify-content: center; gap: .5rem;
         }
+        .login-card button svg { width: 17px; height: 17px; flex-shrink: 0; }
         .login-card button:hover { filter: brightness(1.08); transform: translateY(-1px); }
         .login-card button:active { transform: translateY(0); filter: brightness(.96); }
         .login-error { color: var(--danger); font-size: .82rem; margin-top: 1rem; min-height: 1.4rem; font-weight: 600; }
@@ -243,7 +245,7 @@
         .stat-icon.blue { background: var(--info-soft); color: var(--info); }
         .stat-icon.amber { background: var(--warn-soft); color: var(--warn); }
         .stat-icon.red { background: var(--danger-soft); color: var(--danger); }
-        .stat-card .value { font-size: 1.4rem; font-weight: 800; color: #fff; letter-spacing: -.2px; }
+        .stat-card .value { font-size: 1.4rem; font-weight: 800; color: #fff; letter-spacing: -.2px; unicode-bidi: isolate; direction: ltr; text-align: right; }
         .stat-card .value.green { color: var(--accent-hover); }
         .stat-card .value.red { color: var(--danger); }
 
@@ -305,7 +307,7 @@
         }
         .terminal-box::-webkit-scrollbar { width: 6px; }
         .terminal-box::-webkit-scrollbar-thumb { background: #2c2d33; border-radius: 10px; }
-        .term-line { padding: .2rem 0; border-bottom: 1px solid rgba(255,255,255,.028); }
+        .term-line { padding: .2rem 0; border-bottom: 1px solid rgba(255,255,255,.028); overflow-wrap: anywhere; word-break: break-word; }
         .term-line:last-child { border-bottom: none; }
         .term-line .time { color: #58585f; margin-left: .45rem; }
         .term-line.green { color: var(--accent-hover); }

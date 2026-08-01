@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
   currency: { type: String, default: 'USD' },
-  url: { type: String, required: true },
+  url: { type: String, default: '' }, // تم التعديل: إزالة required: true وإضافة قيمة افتراضية فارغة
   lastUpdated: { type: Date, default: Date.now }
 });
 
@@ -29,7 +29,6 @@ const Product = mongoose.model('Product', productSchema);
 const History = mongoose.model('History', historySchema);
 const Log = mongoose.model('Log', logSchema);
 
-// ===== فئة الخدمة =====
 class DatabaseService {
   async connect() {
     if (mongoose.connection.readyState === 0) {
@@ -40,6 +39,11 @@ class DatabaseService {
   async getProductByStore(storeId) {
     await this.connect();
     return await Product.findOne({ storeId });
+  }
+
+  async getProductById(id) {
+    await this.connect();
+    return await Product.findById(id);
   }
 
   async upsertProduct(storeId, name, price, url, currency = 'USD') {
@@ -76,6 +80,11 @@ class DatabaseService {
 
   getAllProducts() {
     return Product.find();
+  }
+
+  async deleteProduct(id) {
+    await this.connect();
+    return await Product.findByIdAndDelete(id);
   }
 }
 

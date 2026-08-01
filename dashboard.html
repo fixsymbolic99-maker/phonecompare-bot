@@ -6,7 +6,7 @@
     <title>PhoneCompare Bot</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-        /* إصلاح رقم 4: إزالة اللون الأزرق المزعج عند الضغط */
+        /* إزالة اللون الأزرق المزعج عند الضغط */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
 
         :root {
@@ -56,8 +56,8 @@
         .login-card input::placeholder { color: var(--text-faint); }
         .login-card input:focus { border-color: var(--accent); background: #1d1e23; box-shadow: 0 0 0 4px var(--accent-soft); }
         .login-card input:focus + svg, .input-group:focus-within svg { fill: var(--accent-hover); }
-        /* إصلاح رقم 3: زر الدخول صغير ومتناسق */
-        .login-card button { width: 100%; padding: 0.7rem; border: none; border-radius: var(--radius-sm); background: linear-gradient(180deg, var(--accent-hover), var(--accent)); color: #fff; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease); box-shadow: 0 8px 20px -6px rgba(124,92,250,.5); display: flex; align-items: center; justify-content: center; gap: .4rem; }
+        /* زر الدخول صغير ومضغوط ومتمركز */
+        .login-card button { width: 100%; max-width: 150px; margin: 0 auto; padding: 0.5rem 1rem; border: none; border-radius: var(--radius-sm); background: linear-gradient(180deg, var(--accent-hover), var(--accent)); color: #fff; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease); box-shadow: 0 4px 12px -4px rgba(124,92,250,.5); display: flex; align-items: center; justify-content: center; gap: .4rem; }
         .login-card button:hover { filter: brightness(1.08); transform: translateY(-1px); }
         .login-card button:active { transform: translateY(0); filter: brightness(.96); }
         .login-error { color: var(--danger); font-size: .82rem; margin-top: 1rem; min-height: 1.4rem; font-weight: 600; }
@@ -182,7 +182,7 @@
         .admin-card { background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; position: relative; box-shadow: var(--shadow-card); transition: border-color .25s var(--ease); cursor: default; }
         .admin-card:hover { border-color: var(--accent-soft); transform: none; box-shadow: var(--shadow-card); }
         .admin-card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: .8rem; }
-        /* إصلاح رقم 2: الصورة تظهر كاملة داخل الكارت */
+        /* الصورة تظهر كاملة داخل الكارت */
         .admin-card-image-wrap { position: relative; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem; height: 160px; background: linear-gradient(135deg, #1e1e23, #141416); display: flex; align-items: center; justify-content: center; }
         .admin-card-image-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform .5s var(--ease); }
         .admin-card-image-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; color: var(--text-faint); }
@@ -231,18 +231,43 @@
         .btn-secondary-modal { display: inline-flex; align-items: center; gap: .5rem; border: none; padding: .7rem 1.4rem; border-radius: var(--radius-xs); cursor: pointer; font-size: .88rem; font-weight: 700; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); transition: transform .18s var(--ease), background-color .18s var(--ease); }
         .btn-secondary-modal:hover { background: var(--surface-3); transform: translateY(-1px); }
         
-        /* إصلاح رقم 1: الصورة لن تخرج خارج حقل الرفع */
+        /* إصلاح الصورة داخل حقل الرفع */
         .upload-area {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 1rem; border: 2px dashed var(--border); border-radius: var(--radius-xs);
-            background: var(--surface-2); cursor: pointer; transition: 0.2s;
-            min-height: 120px; width: 100%; overflow: hidden; position: relative;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+            width: 100%;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-xs);
+            background: var(--surface-2);
+            cursor: pointer;
+            transition: 0.2s;
+            overflow: hidden;
         }
         .upload-area:hover { border-color: var(--accent); background: var(--surface-3); }
         .upload-area input[type="file"] { display: none; }
-        .upload-area svg { width: 40px; height: 40px; fill: var(--text-faint); }
-        .upload-area span { color: var(--text-dim); font-size: .85rem; }
-        .upload-preview { display: block; margin-top: 10px; width: 100%; height: 120px; object-fit: contain; border-radius: 8px; background: transparent; }
+        .upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+        .upload-placeholder svg { width: 40px; height: 40px; fill: var(--text-faint); }
+        .upload-placeholder span { color: var(--text-dim); font-size: 0.85rem; }
+        .upload-preview {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: var(--radius-xs);
+            background: transparent;
+            z-index: 1;
+        }
 
         @media (max-width: 600px) {
             #main-content { padding: 1.1rem 1.1rem 2rem; }
@@ -380,11 +405,13 @@
                 <div class="form-group">
                     <label>استبدال الصورة (رفع صورة جديدة)</label>
                     <div class="upload-area" onclick="document.getElementById('edit-image-input').click()">
-                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm9.5 5.5l-2-2.5-2.5 3-2-2.5-3 3.5h11z"/></svg>
-                        <span>انقر لاختيار صورة</span>
+                        <div class="upload-placeholder">
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm9.5 5.5l-2-2.5-2.5 3-2-2.5-3 3.5h11z"/></svg>
+                            <span>انقر لاختيار صورة</span>
+                        </div>
+                        <input type="file" id="edit-image-input" accept="image/*" style="display:none;" onchange="handleEditImageUpload(this)">
+                        <img id="edit-image-preview" class="upload-preview">
                     </div>
-                    <input type="file" id="edit-image-input" accept="image/*" style="display:none;" onchange="handleEditImageUpload(this)">
-                    <img id="edit-image-preview" class="upload-preview">
                 </div>
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAdminModal()">إلغاء</button><button type="submit" class="btn-primary">حفظ التعديلات</button></div>
             </form>
@@ -402,11 +429,13 @@
                 <div class="form-group">
                     <label>رفع صورة للمنتج</label>
                     <div class="upload-area" onclick="document.getElementById('add-image-input').click()">
-                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm9.5 5.5l-2-2.5-2.5 3-2-2.5-3 3.5h11z"/></svg>
-                        <span>انقر لاختيار صورة</span>
+                        <div class="upload-placeholder">
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm9.5 5.5l-2-2.5-2.5 3-2-2.5-3 3.5h11z"/></svg>
+                            <span>انقر لاختيار صورة</span>
+                        </div>
+                        <input type="file" id="add-image-input" accept="image/*" style="display:none;" onchange="handleAddImageUpload(this)">
+                        <img id="add-image-preview" class="upload-preview" style="display:none;">
                     </div>
-                    <input type="file" id="add-image-input" accept="image/*" style="display:none;" onchange="handleAddImageUpload(this)">
-                    <img id="add-image-preview" class="upload-preview" style="display:none;">
                 </div>
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAddModal()">إلغاء</button><button type="submit" class="btn-primary" id="add-submit-btn">إضافة المنتج</button></div>
             </form>
@@ -749,8 +778,10 @@
             reader.onload = function(e) {
                 tempAddImage = e.target.result;
                 const preview = document.getElementById('add-image-preview');
+                const placeholder = document.querySelector('#add-modal .upload-placeholder');
                 preview.src = tempAddImage;
                 preview.style.display = 'block';
+                if(placeholder) placeholder.style.display = 'none';
                 addLog('تم تحميل الصورة بنجاح.', 'green');
             };
             reader.readAsDataURL(file);
@@ -763,8 +794,10 @@
             reader.onload = function(e) {
                 tempEditImage = e.target.result;
                 const preview = document.getElementById('edit-image-preview');
+                const placeholder = document.querySelector('#edit-modal .upload-placeholder');
                 preview.src = tempEditImage;
                 preview.style.display = 'block';
+                if(placeholder) placeholder.style.display = 'none';
                 addLog('تم تحميل الصورة الجديدة.', 'green');
             };
             reader.readAsDataURL(file);

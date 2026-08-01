@@ -809,16 +809,33 @@
             sidebar.classList.add('hidden');
         }
 
+        // ✅ تم تعديل دالة تسجيل الدخول لعرض الخطأ الحقيقي
         loginBtn.addEventListener('click', async () => {
             const password = passwordInput.value.trim();
             if (!password) { loginError.textContent = 'أدخل كلمة المرور'; return; }
+            
             try {
+                console.log('1. بدء محاولة تسجيل الدخول...');
                 const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ password })
                 });
-                const data = await res.json();
+                
+                console.log('2. تم استلام الرد من السيرفر. الحالة:', res.status);
+
+                // قراءة الرد كنص أولاً للتأكد من أنه JSON
+                const text = await res.text();
+                console.log('3. نص الرد:', text);
+
+                // تحويل النص لـ JSON
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    throw new Error(`السيرفر لم يرجع JSON (رجع: ${text.substring(0, 30)}...)`);
+                }
+
                 if (!res.ok) throw new Error(data.error || 'فشل الدخول');
                 
                 token = data.token;
@@ -828,9 +845,11 @@
                 addLog('تم تسجيل الدخول بنجاح.', 'green');
                 loadAllData();
             } catch (err) {
-                loginError.textContent = err.message;
+                console.error('خطأ في تسجيل الدخول:', err.message);
+                loginError.textContent = `خطأ: ${err.message}`;
             }
         });
+
         passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
 
         function switchPage(pageId) {
@@ -856,16 +875,4 @@
                 statusText.textContent = status.running ? 'يعمل' : 'متوقف';
                 statusText.className = `value ${status.running ? 'green' : 'red'}`;
 
-                const productsData = await apiRequest('/api/products');
-                const products = Array.isArray(productsData) ? productsData : [];
-                
-                productsTbody.innerHTML = '';
-                if (products.length === 0) {
-                    productsTbody.innerHTML = `<tr><td colspan="4" class="empty-state">لا توجد بيانات منتجات بعد.</td></tr>`;
-                } else {
-                    products.forEach(p => {
-                        const tr = document.createElement('tr');
-                        const storeName = p.storeId.charAt(0).toUpperCase() + p.storeId.slice(1);
-                        tr.innerHTML = `
-                            <td>${p.name}</td>
-     
+              

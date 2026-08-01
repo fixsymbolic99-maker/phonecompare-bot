@@ -6,7 +6,6 @@
     <title>PhoneCompare Bot</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-        /* إزالة اللون الأزرق المزعج عند الضغط */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
 
         :root {
@@ -56,24 +55,7 @@
         .login-card input::placeholder { color: var(--text-faint); }
         .login-card input:focus { border-color: var(--accent); background: #1d1e23; box-shadow: 0 0 0 4px var(--accent-soft); }
         .login-card input:focus + svg, .input-group:focus-within svg { fill: var(--accent-hover); }
-        /* زر دخول شريط طبيعي بعرض البطاقة (تم إصلاح مشكلة الأيقونة الكبيرة) */
-        .login-card button {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: none;
-            border-radius: var(--radius-sm);
-            background: linear-gradient(180deg, var(--accent-hover), var(--accent));
-            color: #fff;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease);
-            box-shadow: 0 4px 12px -4px rgba(124,92,250,.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
+        .login-card button { width: 100%; padding: .75rem 1rem; border: none; border-radius: var(--radius-sm); background: linear-gradient(180deg, var(--accent-hover), var(--accent)); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease); box-shadow: 0 4px 12px -4px rgba(124,92,250,.5); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
         .login-card button:hover { filter: brightness(1.08); transform: translateY(-1px); }
         .login-card button:active { transform: translateY(0); filter: brightness(.96); }
         .login-card button svg { width: 18px; height: 18px; flex-shrink: 0; }
@@ -210,6 +192,18 @@
         .admin-card-meta { color: var(--text-faint); font-size: .76rem; font-weight: 500; display: flex; align-items: center; gap: .4rem; }
         .admin-card-meta span { unicode-bidi: isolate; direction: ltr; }
         .admin-card-meta::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); }
+        /* إضافة المميزات إلى الكارت */
+        .admin-card-features {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+        }
         .admin-more-btn { background: rgba(255,255,255,.04); border: 1px solid transparent; color: var(--text-dim); font-size: 1.25rem; cursor: pointer; width: 30px; height: 30px; border-radius: 9px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease); }
         .admin-more-btn:hover { background: var(--surface-3); color: var(--text); border-color: var(--border); }
         .admin-dropdown { position: absolute; left: 0; right: auto; top: 2.25rem; background: #1c1c21; border: 1px solid var(--border); border-radius: var(--radius-md); display: flex; flex-direction: column; min-width: 172px; z-index: 10; box-shadow: var(--shadow-pop); padding: .4rem; opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.97); transition: opacity .16s var(--ease), transform .16s var(--ease), visibility .16s; backdrop-filter: blur(16px); }
@@ -247,43 +241,13 @@
         .btn-secondary-modal { display: inline-flex; align-items: center; gap: .5rem; border: none; padding: .7rem 1.4rem; border-radius: var(--radius-xs); cursor: pointer; font-size: .88rem; font-weight: 700; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); transition: transform .18s var(--ease), background-color .18s var(--ease); }
         .btn-secondary-modal:hover { background: var(--surface-3); transform: translateY(-1px); }
         
-        /* حقل رفع الصورة (بدون خروج الصورة عن المربع) */
-        .upload-area {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 120px;
-            width: 100%;
-            border: 2px dashed var(--border);
-            border-radius: var(--radius-xs);
-            background: var(--surface-2);
-            cursor: pointer;
-            transition: 0.2s;
-            overflow: hidden;
-        }
+        .upload-area { position: relative; display: flex; justify-content: center; align-items: center; min-height: 120px; width: 100%; border: 2px dashed var(--border); border-radius: var(--radius-xs); background: var(--surface-2); cursor: pointer; transition: 0.2s; overflow: hidden; }
         .upload-area:hover { border-color: var(--accent); background: var(--surface-3); }
         .upload-area input[type="file"] { display: none; }
-        .upload-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            pointer-events: none;
-        }
+        .upload-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; pointer-events: none; }
         .upload-placeholder svg { width: 40px; height: 40px; fill: var(--text-faint); }
         .upload-placeholder span { color: var(--text-dim); font-size: 0.85rem; }
-        .upload-preview {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: var(--radius-xs);
-            background: transparent;
-            z-index: 1;
-        }
+        .upload-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border-radius: var(--radius-xs); background: transparent; z-index: 1; }
 
         @media (max-width: 600px) {
             #main-content { padding: 1.1rem 1.1rem 2rem; }
@@ -305,7 +269,6 @@
                 <input type="password" id="password-input" placeholder="كلمة المرور">
                 <svg viewBox="0 0 24 24"><path d="M12 17a2 2 0 002-2 2 2 0 00-2-2 2 2 0 00-2 2 2 2 0 002 2zm6-9a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2h1V6a5 5 0 0110 0v2h1zM12 3a3 3 0 00-3 3v2h6V6a3 3 0 00-3-3z"/></svg>
             </div>
-            <!-- زر دخول شريط طبيعي مع أيقونة صغيرة جداً -->
             <button id="login-btn">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="flex-shrink: 0;">
                     <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8a2 2 0 002-2V5a2 2 0 00-2-2h-8v2h8v14z"/>
@@ -432,6 +395,8 @@
                         <img id="edit-image-preview" class="upload-preview">
                     </div>
                 </div>
+                <div class="form-group"><label>المتجر</label><select id="edit-store"><option value="manual">يدوي</option><option value="amazon">Amazon</option></select></div>
+                <div class="form-group"><label>رابط المنتج (اختياري)</label><input type="text" id="edit-url" placeholder="https://..."></div>
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAdminModal()">إلغاء</button><button type="submit" class="btn-primary">حفظ التعديلات</button></div>
             </form>
         </div>
@@ -445,17 +410,22 @@
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="add-name" required></div>
                 <div class="form-group"><label>السعر (USD)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" required></div>
                 <div class="form-group"><label>المميزات</label><textarea id="add-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
-                <div class="form-group">
-                    <label>رفع صورة للمنتج</label>
+                <div class="form-group"><label>رفع صورة للمنتج</label>
                     <div class="upload-area" onclick="document.getElementById('add-image-input').click()">
-                        <div class="upload-placeholder">
-                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm9.5 5.5l-2-2.5-2.5 3-2-2.5-3 3.5h11z"/></svg>
-                            <span>انقر لاختيار صورة</span>
-                        </div>
+                        <div class="upload-placeholder"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm9.5 5.5l-2-2.5-2.5 3-2-2.5-3 3.5h11z"/></svg><span>انقر لاختيار صورة</span></div>
                         <input type="file" id="add-image-input" accept="image/*" style="display:none;" onchange="handleAddImageUpload(this)">
                         <img id="add-image-preview" class="upload-preview" style="display:none;">
                     </div>
                 </div>
+                <!-- حقول جديدة: المتجر والرابط -->
+                <div class="form-group"><label>المتجر</label>
+                    <select id="add-store">
+                        <option value="manual">يدوي</option>
+                        <option value="amazon">Amazon</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>رابط المنتج (اختياري)</label><input type="text" id="add-url" placeholder="https://..."></div>
+                
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAddModal()">إلغاء</button><button type="submit" class="btn-primary" id="add-submit-btn">إضافة المنتج</button></div>
             </form>
         </div>
@@ -688,6 +658,7 @@
                         ${imageHtml}
                         <div class="admin-card-title">${product.name}</div>
                         <div class="admin-card-price">${product.currency || 'USD'} ${product.price}</div>
+                        <div class="admin-card-features">${product.features || ''}</div>
                         <div class="admin-card-meta">آخر تحديث: <span>${new Date(product.lastUpdated).toLocaleTimeString()}</span></div>
                     `;
                     adminGrid.appendChild(card);
@@ -719,6 +690,8 @@
             document.getElementById('edit-name').value = product.name;
             document.getElementById('edit-price').value = product.price;
             document.getElementById('edit-features').value = product.features || '';
+            document.getElementById('edit-store').value = product.storeId || 'manual';
+            document.getElementById('edit-url').value = product.url || '';
             const currentPreview = document.getElementById('current-image-preview');
             if (product.image && product.image.startsWith('data:image')) {
                 currentPreview.innerHTML = `<img src="${product.image}" style="max-width:100%; max-height:100px; border-radius:8px; margin-top:8px;">`;
@@ -740,8 +713,10 @@
             const price = parseFloat(document.getElementById('edit-price').value);
             const features = document.getElementById('edit-features').value;
             const image = tempEditImage;
+            const storeId = document.getElementById('edit-store').value;
+            const url = document.getElementById('edit-url').value;
             try {
-                await apiRequest(`/api/products/${id}`, 'PUT', { name, price, features, image });
+                await apiRequest(`/api/products/${id}`, 'PUT', { name, price, features, image, storeId, url });
                 closeAdminModal(); loadAllData();
                 addLog('تم تحديث المنتج بنجاح.', 'green');
                 openSuccessModal('تم تحديث المنتج بنجاح!');
@@ -787,9 +762,6 @@
 
         loadAdminProducts();
 
-        /* ==================================================
-           دوال رفع الصور (Base64)
-           ================================================== */
         function handleAddImageUpload(input) {
             const file = input.files[0];
             if (!file) return;
@@ -822,9 +794,6 @@
             reader.readAsDataURL(file);
         }
 
-        /* ==================================================
-           مودال النجاح (Success Modal)
-           ================================================== */
         function openSuccessModal(message) {
             document.getElementById('success-message').textContent = message || 'تمت العملية بنجاح!';
             document.getElementById('success-modal').classList.add('active');
@@ -834,9 +803,6 @@
             document.getElementById('success-modal').classList.remove('active');
         }
 
-        /* ==================================================
-           مودال التأكيد (Confirm Modal)
-           ================================================== */
         function openConfirmModal(title, message, onConfirm) {
             document.getElementById('confirm-title').textContent = title || 'تأكيد الإجراء';
             document.getElementById('confirm-message').textContent = message || 'هل أنت متأكد؟';
@@ -860,9 +826,6 @@
             if (e.target === e.currentTarget) closeConfirmModal();
         });
 
-        /* ==================================================
-           دوال مودال إضافة منتج جديد (Add Product) - مع التأكيد
-           ================================================== */
         function closeAddModal() {
             document.getElementById('add-modal').classList.remove('active');
             tempAddImage = null;
@@ -874,16 +837,16 @@
             document.getElementById('add-name').value = '';
             document.getElementById('add-price').value = '';
             document.getElementById('add-features').value = '';
+            document.getElementById('add-store').value = 'manual';
+            document.getElementById('add-url').value = '';
             tempAddImage = null;
             document.getElementById('add-image-preview').style.display = 'none';
             document.getElementById('add-image-input').value = '';
             document.getElementById('add-modal').classList.add('active');
         }
 
-        // ربط زر إضافة المنتج بمودال التأكيد بدلاً من الإضافة المباشرة
         document.getElementById('add-submit-btn').addEventListener('click', function(e) {
             e.preventDefault();
-            // جمع البيانات
             const name = document.getElementById('add-name').value.trim();
             const price = document.getElementById('add-price').value.trim();
             if (!name || !price) {
@@ -892,15 +855,15 @@
             }
             const features = document.getElementById('add-features').value;
             const image = tempAddImage;
+            const storeId = document.getElementById('add-store').value;
+            const url = document.getElementById('add-url').value;
 
-            // فتح مودال التأكيد
             openConfirmModal(
                 'تأكيد إضافة المنتج',
                 `هل أنت متأكد من إضافة المنتج "${name}" بسعر ${price} USD؟`,
                 async function() {
-                    // هذا الكود سيتم تنفيذه عند الضغط على "تأكيد"
                     try {
-                        await apiRequest(`/api/products`, 'POST', { name, price: parseFloat(price), features, image });
+                        await apiRequest(`/api/products`, 'POST', { name, price: parseFloat(price), features, image, storeId, url });
                         closeAddModal(); loadAllData();
                         addLog('تم إضافة المنتج بنجاح!', 'green');
                         openSuccessModal('تم إضافة المنتج بنجاح!');
@@ -912,7 +875,6 @@
             );
         });
 
-        // منع الإرسال التقليدي للنموذج
         document.getElementById('add-form').addEventListener('submit', function(e) {
             e.preventDefault();
         });

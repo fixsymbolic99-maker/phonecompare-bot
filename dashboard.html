@@ -192,7 +192,6 @@
         .admin-card-meta { color: var(--text-faint); font-size: .76rem; font-weight: 500; display: flex; align-items: center; gap: .4rem; }
         .admin-card-meta span { unicode-bidi: isolate; direction: ltr; }
         .admin-card-meta::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); }
-        /* إضافة المميزات إلى الكارت */
         .admin-card-features {
             font-size: 0.85rem;
             color: var(--text-dim);
@@ -203,6 +202,18 @@
             overflow: hidden;
             text-overflow: ellipsis;
             line-height: 1.4;
+        }
+        .admin-store-badge {
+            padding: .2rem .7rem;
+            border-radius: 20px;
+            font-size: .65rem;
+            font-weight: 700;
+            background: var(--surface-3);
+            color: var(--text-dim);
+            display: inline-flex;
+            align-items: center;
+            letter-spacing: .2px;
+            margin-right: 0.4rem;
         }
         .admin-more-btn { background: rgba(255,255,255,.04); border: 1px solid transparent; color: var(--text-dim); font-size: 1.25rem; cursor: pointer; width: 30px; height: 30px; border-radius: 9px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease); }
         .admin-more-btn:hover { background: var(--surface-3); color: var(--text); border-color: var(--border); }
@@ -395,7 +406,9 @@
                         <img id="edit-image-preview" class="upload-preview">
                     </div>
                 </div>
-                <div class="form-group"><label>المتجر</label><select id="edit-store"><option value="manual">يدوي</option><option value="amazon">Amazon</option></select></div>
+                <!-- حقل المتجر (نصي) -->
+                <div class="form-group"><label>المتجر (اكتب الاسم)</label><input type="text" id="edit-store-input" placeholder="مثال: سامسونج أو يدوي"></div>
+                <!-- حقل الرابط -->
                 <div class="form-group"><label>رابط المنتج (اختياري)</label><input type="text" id="edit-url" placeholder="https://..."></div>
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAdminModal()">إلغاء</button><button type="submit" class="btn-primary">حفظ التعديلات</button></div>
             </form>
@@ -417,13 +430,8 @@
                         <img id="add-image-preview" class="upload-preview" style="display:none;">
                     </div>
                 </div>
-                <!-- حقول جديدة: المتجر والرابط -->
-                <div class="form-group"><label>المتجر</label>
-                    <select id="add-store">
-                        <option value="manual">يدوي</option>
-                        <option value="amazon">Amazon</option>
-                    </select>
-                </div>
+                <!-- حقل المتجر (نصي) -->
+                <div class="form-group"><label>المتجر (اكتب الاسم)</label><input type="text" id="add-store-input" placeholder="مثال: سامسونج أو يدوي"></div>
                 <div class="form-group"><label>رابط المنتج (اختياري)</label><input type="text" id="add-url" placeholder="https://..."></div>
                 
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAddModal()">إلغاء</button><button type="submit" class="btn-primary" id="add-submit-btn">إضافة المنتج</button></div>
@@ -599,6 +607,7 @@
                 loadAdminProducts();
             } catch (err) {
                 addLog(`خطأ: ${err.message}`, 'red');
+                alert(`حدث خطأ أثناء تحميل البيانات: ${err.message}`);
             }
         }
 
@@ -643,9 +652,15 @@
                         </div>`;
                     }
 
+                    // عرض المتجر في الكارت (بدون النقطة)
+                    const storeDisplay = product.storeId ? `<span class="admin-store-badge">${product.storeId}</span>` : '';
+
                     card.innerHTML = `
                         <div class="admin-card-top">
-                            <span class="admin-status-badge active">مقارن</span>
+                            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                                <span class="admin-status-badge active">مقارن</span>
+                                ${storeDisplay}
+                            </div>
                             <div style="position:relative;">
                                 <button class="admin-more-btn" onclick="toggleAdminDropdown('${product._id || product.id}')">⋮</button>
                                 <div class="admin-dropdown" id="admin-dropdown-${product._id || product.id}">
@@ -667,6 +682,7 @@
             } catch (err) {
                 console.error(err);
                 addLog(`خطأ في تحميل إدارة المنتجات: ${err.message}`, 'red');
+                alert(`فشل تحميل المنتجات: ${err.message}`);
             }
         }
 
@@ -690,7 +706,7 @@
             document.getElementById('edit-name').value = product.name;
             document.getElementById('edit-price').value = product.price;
             document.getElementById('edit-features').value = product.features || '';
-            document.getElementById('edit-store').value = product.storeId || 'manual';
+            document.getElementById('edit-store-input').value = product.storeId || '';
             document.getElementById('edit-url').value = product.url || '';
             const currentPreview = document.getElementById('current-image-preview');
             if (product.image && product.image.startsWith('data:image')) {
@@ -713,7 +729,7 @@
             const price = parseFloat(document.getElementById('edit-price').value);
             const features = document.getElementById('edit-features').value;
             const image = tempEditImage;
-            const storeId = document.getElementById('edit-store').value;
+            const storeId = document.getElementById('edit-store-input').value;
             const url = document.getElementById('edit-url').value;
             try {
                 await apiRequest(`/api/products/${id}`, 'PUT', { name, price, features, image, storeId, url });
@@ -837,7 +853,7 @@
             document.getElementById('add-name').value = '';
             document.getElementById('add-price').value = '';
             document.getElementById('add-features').value = '';
-            document.getElementById('add-store').value = 'manual';
+            document.getElementById('add-store-input').value = '';
             document.getElementById('add-url').value = '';
             tempAddImage = null;
             document.getElementById('add-image-preview').style.display = 'none';
@@ -855,7 +871,7 @@
             }
             const features = document.getElementById('add-features').value;
             const image = tempAddImage;
-            const storeId = document.getElementById('add-store').value;
+            const storeId = document.getElementById('add-store-input').value;
             const url = document.getElementById('add-url').value;
 
             openConfirmModal(
@@ -885,4 +901,4 @@
 
     </script>
 </body>
-</html>
+    </html>

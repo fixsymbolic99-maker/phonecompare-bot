@@ -216,7 +216,7 @@
             align-items: center;
             letter-spacing: .2px;
         }
-        /* زر نقل إلى متجر - تم ضبط المسافات */
+        /* زر نقل إلى متجر */
         .admin-link-btn {
             display: flex;
             align-items: center;
@@ -224,7 +224,7 @@
             width: 100%;
             padding: 0.5rem 1rem;
             margin-top: 0.6rem;
-            margin-bottom: 0.4rem; /* مسافة أسفل الزر لفصله عن التاريخ */
+            margin-bottom: 0.4rem;
             border-radius: var(--radius-sm);
             background: linear-gradient(180deg, var(--accent-hover), var(--accent));
             color: #fff;
@@ -411,7 +411,7 @@
         </div>
     </div>
 
-    <!-- مودال الرسائل (لأخطاء النظام والتنبيهات) - تم إصلاح زر موافق -->
+    <!-- مودال الرسائل -->
     <div id="message-modal" class="modal-overlay" style="z-index: 1150;">
         <div class="modal-box">
             <div class="modal-header"><span class="modal-title" id="message-title">تنبيه</span><button class="modal-close" onclick="closeMessageModal()">✕</button></div>
@@ -443,9 +443,7 @@
                         <img id="edit-image-preview" class="upload-preview">
                     </div>
                 </div>
-                <!-- حقل المتجر (نصي) -->
                 <div class="form-group"><label>المتجر (اكتب الاسم)</label><input type="text" id="edit-store-input" placeholder="مثال: سامسونج أو يدوي"></div>
-                <!-- حقل الرابط -->
                 <div class="form-group"><label>رابط المنتج (اختياري)</label><input type="text" id="edit-url" placeholder="https://..."></div>
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAdminModal()">إلغاء</button><button type="submit" class="btn-primary">حفظ التعديلات</button></div>
             </form>
@@ -467,7 +465,6 @@
                         <img id="add-image-preview" class="upload-preview" style="display:none;">
                     </div>
                 </div>
-                <!-- حقل المتجر (نصي) -->
                 <div class="form-group"><label>المتجر (اكتب الاسم)</label><input type="text" id="add-store-input" placeholder="مثال: سامسونج أو يدوي"></div>
                 <div class="form-group"><label>رابط المنتج (اختياري)</label><input type="text" id="add-url" placeholder="https://..."></div>
                 
@@ -689,10 +686,7 @@
                         </div>`;
                     }
 
-                    // عرض المتجر في الكارت (فوق العنوان وبلون بنفسجي)
                     const storeDisplay = product.storeId ? `<div class="admin-store-badge" style="margin-bottom: 0.3rem; display: inline-block;">${product.storeId}</div>` : '';
-
-                    // زر نقل إلى متجر (يظهر تحت المميزات وبنفس تصميم زر الدخول)
                     const urlHtml = product.url ? `<a href="${product.url}" target="_blank" rel="noopener noreferrer" class="admin-link-btn">نقل إلى متجر</a>` : '';
 
                     card.innerHTML = `
@@ -767,11 +761,17 @@
             const name = document.getElementById('edit-name').value;
             const price = parseFloat(document.getElementById('edit-price').value);
             const features = document.getElementById('edit-features').value;
-            const image = tempEditImage;
             const storeId = document.getElementById('edit-store-input').value;
             const url = document.getElementById('edit-url').value;
+            
+            // بناء جسم الطلب، وإرسال الصورة فقط إذا تم تغييرها
+            const body = { name, price, features, storeId, url };
+            if (tempEditImage && tempEditImage.startsWith('data:image')) {
+                body.image = tempEditImage;
+            }
+
             try {
-                await apiRequest(`/api/products/${id}`, 'PUT', { name, price, features, image, storeId, url });
+                await apiRequest(`/api/products/${id}`, 'PUT', body);
                 closeAdminModal(); loadAllData();
                 addLog('تم تحديث المنتج بنجاح.', 'green');
                 openSuccessModal('تم تحديث المنتج بنجاح!');
@@ -919,16 +919,20 @@
                 return;
             }
             const features = document.getElementById('add-features').value;
-            const image = tempAddImage;
             const storeId = document.getElementById('add-store-input').value;
             const url = document.getElementById('add-url').value;
+            // إرسال الصورة فقط إذا كانت موجودة
+            const body = { name, price: parseFloat(price), features, storeId, url };
+            if (tempAddImage && tempAddImage.startsWith('data:image')) {
+                body.image = tempAddImage;
+            }
 
             openConfirmModal(
                 'تأكيد إضافة المنتج',
                 `هل أنت متأكد من إضافة المنتج "${name}" بسعر ${price} USD؟`,
                 async function() {
                     try {
-                        await apiRequest(`/api/products`, 'POST', { name, price: parseFloat(price), features, image, storeId, url });
+                        await apiRequest(`/api/products`, 'POST', body);
                         closeAddModal(); loadAllData();
                         addLog('تم إضافة المنتج بنجاح!', 'green');
                         openSuccessModal('تم إضافة المنتج بنجاح!');

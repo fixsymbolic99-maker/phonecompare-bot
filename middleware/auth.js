@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config/config');
 
 module.exports = function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -8,7 +7,8 @@ module.exports = function authMiddleware(req, res, next) {
   }
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, config.JWT_SECRET);
+    // تعديل مهم جداً: استخدام process.env مباشرة لتفادي مشاكل تحميل config في Vercel
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-change-me');
     req.user = decoded;
     next();
   } catch (err) {

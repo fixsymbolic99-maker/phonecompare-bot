@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "installCommand": "npm install --build-from-source",
+  "installCommand": "npm install",
   "builds": [
     {
       "src": "server.js",
@@ -17,11 +17,11 @@
       "dest": "/dashboard.html"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
+      "src": "/admin",
+      "dest": "/dashboard.html"
     },
     {
-      "src": "/admin",
+      "src": "/api/(.*)",
       "dest": "/server.js"
     }
   ]

@@ -260,7 +260,7 @@
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: .74rem .9rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-xs); color: #fff; font-size: .92rem; transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background-color .18s var(--ease); font-family: inherit; }
         .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-faint); }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent); outline: none; background: #1d1e23; box-shadow: 0 0 0 3px var(--accent-soft); }
-        .form-group textarea { resize: vertical; min-height: 66px; }
+        .form-group textarea { resize: none; /* إزالة النقطة البيضاء (مقبض تغيير الحجم) */ min-height: 66px; }
         .form-actions { display: flex; gap: .65rem; justify-content: flex-end; margin-top: 1.7rem; }
         .btn-primary { display: inline-flex; align-items: center; gap: .5rem; border: none; padding: .7rem 1.4rem; border-radius: var(--radius-xs); cursor: pointer; font-size: .88rem; font-weight: 700; background: linear-gradient(180deg, var(--accent-hover), var(--accent)); color: #fff; box-shadow: 0 1px 0 rgba(255,255,255,.1) inset, 0 10px 22px -6px rgba(124,92,250,.6); transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease); }
         .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
@@ -741,14 +741,13 @@
             const price = parseFloat(document.getElementById('add-price').value);
             const features = document.getElementById('add-features').value;
             try {
-                // الآن السيرفر يدعم POST /api/products
                 await apiRequest(`/api/products`, 'POST', { name, price, features });
                 closeAddModal(); loadAllData();
                 addLog('تم إضافة المنتج بنجاح!', 'green');
-                alert('تم إضافة المنتج بنجاح!'); // رسالة نجاح للمستخدم
+                alert('تم إضافة المنتج بنجاح!');
             } catch (err) {
                 addLog(`خطأ في الإضافة: ${err.message}`, 'red');
-                alert(`خطأ: ${err.message}`); // رسالة خطأ للمستخدم
+                alert(`خطأ: ${err.message}`);
             }
         });
     </script>

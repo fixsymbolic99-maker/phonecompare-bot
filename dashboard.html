@@ -91,7 +91,6 @@
     </style>
 </head>
 <body>
-    <!-- شاشة الدخول -->
     <div id="login-screen">
         <div class="login-card">
             <div class="login-logo">PC</div>
@@ -103,11 +102,10 @@
         </div>
     </div>
 
-    <!-- القائمة الجانبية -->
     <div id="sidebar" class="hidden">
         <div class="sidebar-header">
             <h2>PhoneCompare</h2>
-            <button class="close-sidebar" id="close-sidebar">✕</button>
+            <button class="close-sidebar" id="close-sidebar">x</button>
         </div>
         <div class="nav-item active" data-page="home">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> الرئيسية
@@ -121,12 +119,16 @@
         <div class="nav-item" data-page="logs">
             <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg> سجل الأحداث
         </div>
+        <!-- زر التنقل للوحة الجديدة -->
+        <div class="nav-item" onclick="window.location.href='/admin'">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6h2V7zm0 8h-2v2h2v-2z"/></svg> مدير المنتجات
+        </div>
+
         <div class="nav-item sidebar-footer" id="logout-btn">
             <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> خروج
         </div>
     </div>
 
-    <!-- المحتوى الرئيسي -->
     <div id="main-content">
         <header class="app-header">
             <button class="menu-toggle" id="open-sidebar">
@@ -139,7 +141,6 @@
             </div>
         </header>
 
-        <!-- الصفحة الرئيسية -->
         <div id="page-home" class="page active">
             <h2 class="page-title">الواجهة الرئيسية</h2>
             <p class="page-sub">تحكم سريع بجميع عمليات البوت والمتاجر</p>
@@ -170,7 +171,6 @@
             </div>
         </div>
 
-        <!-- صفحة المتاجر -->
         <div id="page-stores" class="page">
             <h2 class="page-title">المتاجر</h2>
             <p class="page-sub">المتاجر المتصلة بالبوت</p>
@@ -180,7 +180,6 @@
             </div>
         </div>
 
-        <!-- صفحة المنتجات -->
         <div id="page-products" class="page">
             <h2 class="page-title">المنتجات</h2>
             <p class="page-sub">قائمة المنتجات المقارنة حالياً</p>
@@ -190,7 +189,6 @@
             </div>
         </div>
 
-        <!-- صفحة السجلات -->
         <div id="page-logs" class="page">
             <h2 class="page-title">سجل الأحداث</h2>
             <p class="page-sub">جميع سجلات النظام</p>

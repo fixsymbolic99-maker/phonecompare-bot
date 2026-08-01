@@ -12,68 +12,39 @@
         .header h1 { color: #7c3aed; }
         .btn-purple { background: #7c3aed; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .btn-purple:hover { background: #6d28d9; }
+        .btn-back { background: #333; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .btn-back:hover { background: #444; }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: #141414;
-            border: 1px solid #222;
-            border-radius: 16px;
-            padding: 1rem;
-            position: relative;
-            transition: 0.2s;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+        .card { background: #141414; border: 1px solid #222; border-radius: 16px; padding: 1rem; position: relative; transition: 0.2s; }
         .card:hover { border-color: #7c3aed40; }
         
         .card-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; }
         .card-image { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 0.8rem; background: #222; }
-        
         .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
         .card-price { color: #7c3aed; font-size: 1.1rem; font-weight: bold; }
         .card-meta { color: #888; font-size: 0.8rem; }
 
-        .more-btn {
-            background: transparent; border: none; color: #888; font-size: 1.5rem; cursor: pointer; padding: 0 4px; line-height: 1;
-        }
-        .dropdown {
-            position: absolute; right: 0; top: 2rem;
-            background: #1f1f1f; border: 1px solid #333; border-radius: 8px;
-            display: none; flex-direction: column; min-width: 150px; z-index: 10;
-        }
+        .more-btn { background: transparent; border: none; color: #888; font-size: 1.5rem; cursor: pointer; padding: 0 4px; line-height: 1; }
+        .dropdown { position: absolute; right: 0; top: 2rem; background: #1f1f1f; border: 1px solid #333; border-radius: 8px; display: none; flex-direction: column; min-width: 150px; z-index: 10; }
         .dropdown.active { display: flex; }
-        .dropdown-item {
-            padding: 0.6rem 1rem; cursor: pointer; font-size: 0.9rem; color: #ccc; transition: 0.1s;
-            border-bottom: 1px solid #2a2a2a;
-        }
+        .dropdown-item { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.9rem; color: #ccc; transition: 0.1s; border-bottom: 1px solid #2a2a2a; }
         .dropdown-item:last-child { border-bottom: none; }
         .dropdown-item:hover { background: #333; color: #fff; }
         .dropdown-item.danger { color: #ff4444; }
 
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            display: none; justify-content: center; align-items: center; z-index: 999;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 999; }
         .modal-overlay.active { display: flex; }
-        .modal-box {
-            background: #141414; border: 1px solid #333; border-radius: 16px;
-            padding: 2rem; max-width: 450px; width: 90%; max-height: 90vh; overflow-y: auto;
-        }
+        .modal-box { background: #141414; border: 1px solid #333; border-radius: 16px; padding: 2rem; max-width: 450px; width: 90%; max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
         .modal-title { font-size: 1.2rem; font-weight: 600; }
         .modal-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
         
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; color: #888; margin-bottom: 0.3rem; font-size: 0.9rem; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 0.6rem; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.95rem;
-        }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.95rem; }
         .form-group input:focus, .form-group textarea:focus { border-color: #7c3aed; outline: none; }
         .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem; }
-
         .btn-secondary { background: #333; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; }
         .btn-primary { background: #7c3aed; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; }
 
@@ -85,27 +56,24 @@
         .status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; background: #1f1f1f; color: #888; }
         .status-badge.active { background: #7c3aed20; color: #7c3aed; border: 1px solid #7c3aed40; }
 
-        @media (max-width: 600px) {
-            body { padding: 1rem; }
-            .grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 600px) { body { padding: 1rem; } .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>📦 إدارة المنتجات</h1>
-        <button class="btn-purple" onclick="alert('ستضيف هنا منتج جديد لاحقاً')">+ إضافة منتج</button>
+        <h1>إدارة المنتجات</h1>
+        <div>
+            <button class="btn-back" onclick="window.location.href='/'">الرئيسية</button>
+            <button class="btn-purple" onclick="alert('ستضيف هنا منتج جديد لاحقاً')">إضافة منتج</button>
+        </div>
     </div>
-    <div id="products-grid" class="grid">
-        <!-- سيتم تعبئتها بواسطة JS -->
-    </div>
+    <div id="products-grid" class="grid"></div>
 
-    <!-- مودال التعديل -->
     <div id="edit-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
                 <span class="modal-title">تعديل المنتج</span>
-                <button class="modal-close" onclick="closeModal()">✕</button>
+                <button class="modal-close" onclick="closeModal()">x</button>
             </div>
             <form id="edit-form">
                 <input type="hidden" id="edit-id">
@@ -122,10 +90,8 @@
                     <textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>اختر صورة (من مجلد images)</label>
-                    <div id="image-selector" class="image-select-grid">
-                        <!-- سيتم تعبئتها بالصور -->
-                    </div>
+                    <label>اختر صورة</label>
+                    <div id="image-selector" class="image-select-grid"></div>
                     <small style="color:#666; display:block; margin-top:5px;">انقر على الصورة لاختيارها (يجب رفعها مسبقاً على GitHub).</small>
                 </div>
                 <div class="form-actions">
@@ -139,9 +105,7 @@
     <script>
         const BACKEND_URL = window.location.origin;
         let token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = '/';
-        }
+        if (!token) { window.location.href = '/'; }
 
         async function apiRequest(endpoint, method = 'GET', body = null) {
             const headers = { 'Content-Type': 'application/json' };
@@ -159,7 +123,6 @@
             try {
                 const products = await apiRequest('/api/products');
                 const images = await apiRequest('/api/images');
-                
                 const grid = document.getElementById('products-grid');
                 grid.innerHTML = '';
 
@@ -178,12 +141,9 @@
                             <div style="position:relative;">
                                 <button class="more-btn" onclick="toggleDropdown('${product._id || product.id}')">⋮</button>
                                 <div class="dropdown" id="dropdown-${product._id || product.id}">
-                                    <div class="dropdown-item" onclick="openInfo('${product._id || product.id}')">المعلومات</div>
                                     <div class="dropdown-item" onclick="openEdit('${product._id || product.id}')">تعديل</div>
                                     <div class="dropdown-item danger" onclick="deleteProduct('${product._id || product.id}')">حذف</div>
                                     <div class="dropdown-item" onclick="rePublish('${product._id || product.id}')">إعادة نشر</div>
-                                    <div class="dropdown-item" onclick="reorder('${product._id || product.id}', 'up')">نقل لأعلى</div>
-                                    <div class="dropdown-item" onclick="reorder('${product._id || product.id}', 'down')">نقل لأسفل</div>
                                 </div>
                             </div>
                         </div>
@@ -194,13 +154,8 @@
                     `;
                     grid.appendChild(card);
                 });
-
                 window._imagesList = images;
-
-            } catch (err) {
-                console.error(err);
-                alert('فشل تحميل البيانات: ' + err.message);
-            }
+            } catch (err) { alert('فشل تحميل البيانات: ' + err.message); }
         }
 
         function toggleDropdown(id) {
@@ -209,22 +164,17 @@
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
             if (!isOpen) menu.classList.add('active');
         }
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.more-btn')) {
-                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
-            }
-        });
+        document.addEventListener('click', (e) => { if (!e.target.closest('.more-btn')) document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active')); });
 
         async function openEdit(id) {
             const products = await apiRequest('/api/products');
             const product = products.find(p => (p._id || p.id) === id);
             if (!product) return;
-
             document.getElementById('edit-id').value = product._id || product.id;
             document.getElementById('edit-name').value = product.name;
             document.getElementById('edit-price').value = product.price;
             document.getElementById('edit-features').value = product.features || '';
-
+            
             const selector = document.getElementById('image-selector');
             selector.innerHTML = '';
             window._imagesList.forEach(img => {
@@ -238,13 +188,10 @@
                 };
                 selector.appendChild(imgEl);
             });
-
             document.getElementById('edit-modal').classList.add('active');
         }
 
-        function closeModal() {
-            document.getElementById('edit-modal').classList.remove('active');
-        }
+        function closeModal() { document.getElementById('edit-modal').classList.remove('active'); }
 
         document.getElementById('edit-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -252,46 +199,28 @@
             const name = document.getElementById('edit-name').value;
             const price = parseFloat(document.getElementById('edit-price').value);
             const features = document.getElementById('edit-features').value;
-            const selectedImg = document.getElementById('edit-id').dataset.selectedImage || 
-                               document.querySelector('.image-preview.selected')?.src.split('/').pop();
-
+            const selectedImg = document.getElementById('edit-id').dataset.selectedImage || document.querySelector('.image-preview.selected')?.src.split('/').pop();
             try {
                 await apiRequest(`/api/products/${id}`, 'PUT', { name, price, features, image: selectedImg });
-                closeModal();
-                loadProducts();
-                alert('تم تحديث المنتج بنجاح!');
-            } catch (err) {
-                alert('خطأ في الحفظ: ' + err.message);
-            }
+                closeModal(); loadProducts(); alert('تم تحديث المنتج بنجاح!');
+            } catch (err) { alert('خطأ في الحفظ: ' + err.message); }
         });
 
         async function deleteProduct(id) {
             if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
-            try {
-                await apiRequest(`/api/products/${id}`, 'DELETE');
-                loadProducts();
-            } catch (err) { alert(err.message); }
+            try { await apiRequest(`/api/products/${id}`, 'DELETE'); loadProducts(); } catch (err) { alert(err.message); }
         }
 
         async function rePublish(id) {
             const store = prompt('اكتب اسم المتجر للزحف (مثلاً amazon) أو اتركه فارغاً للكل:');
             try {
-                const endpoint = store ? `/api/proxy/start/${store}` : '/api/proxy/start-all';
-                await apiRequest(endpoint, 'POST');
+                await apiRequest(store ? `/api/proxy/start/${store}` : '/api/proxy/start-all', 'POST');
                 alert('تم بدء الزحف');
             } catch (err) { alert(err.message); }
         }
 
-        async function reorder(id, direction) {
-            alert('سيتم تنفيذ ميزة الترتيب لاحقاً. سيتم إعادة تحميل البيانات.');
-            loadProducts();
-        }
-
         loadProducts();
-
-        document.getElementById('edit-modal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) closeModal();
-        });
+        document.getElementById('edit-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeModal(); });
     </script>
 </body>
 </html>

@@ -69,9 +69,9 @@ app.get('/api/images', authMiddleware, (req, res) => {
   res.json(files);
 });
 
-// ===== تعديل المنتج (تم إصلاح حفظ الصورة) =====
+// ===== تعديل المنتج (يدعم المصفوفة الجديدة) =====
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
-  const { name, price, features, image, storeId, url } = req.body;
+  const { name, price, features, image, stores } = req.body;
   try {
     await dbService.connect();
     const product = await dbService.getProductById(req.params.id);
@@ -79,10 +79,8 @@ app.put('/api/products/:id', authMiddleware, async (req, res) => {
     if (name !== undefined) product.name = name;
     if (price !== undefined) product.price = price;
     if (features !== undefined) product.features = features;
-    // إذا تم إرسال image (حتى لو فارغة) نقوم بتحديثها، وإلا نترك الصورة القديمة
     if (image !== undefined) product.image = image;
-    if (storeId !== undefined) product.storeId = storeId;
-    if (url !== undefined) product.url = url;
+    if (stores !== undefined) product.stores = stores; // تحديث المصفوفة
     await product.save();
     res.json({ message: 'Product updated' });
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -97,21 +95,22 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ===== إضافة منتج جديد =====
+// ===== إضافة منتج جديد (يدعم المصفوفة الجديدة) =====
 app.post('/api/products', authMiddleware, async (req, res) => {
-  const { name, price, features, image, storeId, url } = req.body;
+  const { name, price, features, image, stores } = req.body;
   try {
     await dbService.connect();
-    const finalStoreId = storeId || 'manual';
-    const newProductId = await dbService.upsertProduct(finalStoreId, name, price, '', 'USD');
-    const product = await dbService.getProductById(newProductId);
-    if (product) {
-      if (features) product.features = features;
-      if (image) product.image = image;
-      if (url !== undefined) product.url = url;
-      await product.save();
-    }
-    res.status(201).json({ message: 'Product added successfully', id: newProductId });
+    // إنشاء منتج جديد مع المصفوفة
+    const newProduct = new (require('./services/database.service').Product)({
+      name,
+      price,
+      currency: 'USD',
+      features,
+      image,
+      stores: stores || [] // إذا لم يتم إرسالها، تكون مصفوفة فارغة
+    });
+    await newProduct.save();
+    res.status(201).json({ message: 'Product added successfully', id: newProduct._id });
   } catch (err) {
     logger.error(`Error adding product: ${err.message}`);
     res.status(500).json({ error: err.message });

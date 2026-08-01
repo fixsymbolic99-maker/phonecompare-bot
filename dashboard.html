@@ -216,14 +216,15 @@
             align-items: center;
             letter-spacing: .2px;
         }
-        /* زر نقل إلى متجر (نفس تصميم زر الدخول) */
+        /* زر نقل إلى متجر - تم ضبط المسافات */
         .admin-link-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
             padding: 0.5rem 1rem;
-            margin-top: 0.8rem;
+            margin-top: 0.6rem;
+            margin-bottom: 0.4rem; /* مسافة أسفل الزر لفصله عن التاريخ */
             border-radius: var(--radius-sm);
             background: linear-gradient(180deg, var(--accent-hover), var(--accent));
             color: #fff;
@@ -410,13 +411,13 @@
         </div>
     </div>
 
-    <!-- مودال الرسائل (لأخطاء النظام والتنبيهات) -->
+    <!-- مودال الرسائل (لأخطاء النظام والتنبيهات) - تم إصلاح زر موافق -->
     <div id="message-modal" class="modal-overlay" style="z-index: 1150;">
         <div class="modal-box">
             <div class="modal-header"><span class="modal-title" id="message-title">تنبيه</span><button class="modal-close" onclick="closeMessageModal()">✕</button></div>
             <div style="padding: 1rem 0; color: var(--text); font-size: 1rem; text-align: center;" id="message-content">...</div>
             <div class="form-actions">
-                <button type="button" class="btn-primary" onclick="closeSuccessModal()">موافق</button>
+                <button type="button" class="btn-primary" onclick="closeMessageModal()">موافق</button>
             </div>
         </div>
     </div>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- نفس الـ meta والـ style الأساسي السابق -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>PhoneCompare Bot</title>
@@ -24,7 +23,6 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', -apple-system, sans-serif; }
 
-        /* --- نفس الـ CSS القديم --- */
         html { scrollbar-color: #2c2d33 transparent; scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 9px; height: 9px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -208,7 +206,8 @@
         .admin-grid-empty { grid-column: 1 / -1; text-align: center; padding: 3.5rem 1.5rem; color: var(--text-faint); font-size: .9rem; font-weight: 500; background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px dashed var(--border); border-radius: var(--radius-md); }
 
         /* --- Modals --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,8,.74); backdrop-filter: blur(7px); display: flex; justify-content: center; align-items: center; z-index: 999; opacity: 0; visibility: hidden; transition: opacity .22s var(--ease), visibility .22s; padding: 1.5rem; }
+        /* رفع z-index للمودالات لضمان ظهورها فوق بعضها البعض */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(5,5,8,.74); backdrop-filter: blur(7px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity .22s var(--ease), visibility .22s; padding: 1.5rem; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-box { background: linear-gradient(180deg, #18181c, var(--surface)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.9rem; max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto; box-shadow: var(--shadow-pop); transform: scale(.94) translateY(10px); transition: transform .26s var(--ease); }
         .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
@@ -234,13 +233,13 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 1rem; border: 1px dashed var(--border); border-radius: var(--radius-xs);
             background: var(--surface-2); cursor: pointer; transition: border-color .2s var(--ease), background-color .2s var(--ease);
-            margin-bottom: 0.5rem; gap: 0.5rem;
+            position: relative; min-height: 100px;
         }
         .upload-area:hover { border-color: var(--accent); background: var(--surface-3); }
         .upload-area input[type="file"] { display: none; }
         .upload-area svg { width: 32px; height: 32px; fill: var(--text-faint); }
         .upload-area span { color: var(--text-dim); font-size: .85rem; }
-        .upload-preview { display: block; margin: 10px auto; max-width: 100%; max-height: 150px; border-radius: var(--radius-xs); border: 1px solid var(--border); }
+        .upload-preview { display: block; margin-top: 10px; max-width: 100%; max-height: 150px; border-radius: var(--radius-xs); border: 1px solid var(--border); object-fit: contain; /* ضبط الصورة داخل الحقل */ }
 
         @media (max-width: 600px) {
             #main-content { padding: 1.1rem 1.1rem 2rem; }
@@ -253,7 +252,7 @@
     </style>
 </head>
 <body>
-    <!-- نفس الـ HTML السابق (Login, Sidebar, Pages) -->
+    <!-- نفس الـ HTML السابق -->
     <div id="login-screen">
         <div class="login-card">
             <div class="login-logo">PC</div>
@@ -343,14 +342,25 @@
         </div>
     </div>
 
-    <!-- مودال تأكيد الإضافة الجديد -->
-    <div id="confirm-modal" class="modal-overlay">
+    <!-- مودال التأكيد -->
+    <div id="confirm-modal" class="modal-overlay" style="z-index: 1100;">
         <div class="modal-box">
             <div class="modal-header"><span class="modal-title" id="confirm-title">تأكيد الإجراء</span><button class="modal-close" onclick="closeConfirmModal()">✕</button></div>
             <div style="padding: 1rem 0; color: var(--text-dim); font-size: 1rem; text-align: center;" id="confirm-message">هل أنت متأكد؟</div>
             <div class="form-actions">
                 <button type="button" class="btn-secondary-modal" onclick="closeConfirmModal()">إلغاء</button>
                 <button type="button" class="btn-primary" id="confirm-yes-btn">تأكيد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال النجاح (مودال جديد أنيق) -->
+    <div id="success-modal" class="modal-overlay" style="z-index: 1150;">
+        <div class="modal-box">
+            <div class="modal-header"><span class="modal-title">تمت العملية بنجاح</span><button class="modal-close" onclick="closeSuccessModal()">✕</button></div>
+            <div style="padding: 1rem 0; color: var(--success); font-size: 1.1rem; text-align: center;" id="success-message">...</div>
+            <div class="form-actions">
+                <button type="button" class="btn-primary" onclick="closeSuccessModal()">موافق</button>
             </div>
         </div>
     </div>
@@ -684,7 +694,7 @@
                 await apiRequest(`/api/products/${id}`, 'PUT', { name, price, features, image });
                 closeAdminModal(); loadAllData();
                 addLog('تم تحديث المنتج بنجاح.', 'green');
-                alert('تم تحديث المنتج بنجاح!');
+                openSuccessModal('تم تحديث المنتج بنجاح!');
             } catch (err) {
                 addLog(`خطأ في الحفظ: ${err.message}`, 'red');
                 alert(`خطأ: ${err.message}`);
@@ -692,16 +702,21 @@
         });
 
         async function deleteAdminProduct(id) {
-            if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
-            try {
-                await apiRequest(`/api/products/${id}`, 'DELETE');
-                loadAllData();
-                addLog('تم حذف المنتج.', 'yellow');
-                alert('تم حذف المنتج.');
-            } catch (err) {
-                addLog(`خطأ في الحذف: ${err.message}`, 'red');
-                alert(`خطأ: ${err.message}`);
-            }
+            openConfirmModal(
+                'تأكيد الحذف',
+                'هل أنت متأكد من حذف هذا المنتج؟',
+                async function() {
+                    try {
+                        await apiRequest(`/api/products/${id}`, 'DELETE');
+                        loadAllData();
+                        addLog('تم حذف المنتج.', 'yellow');
+                        openSuccessModal('تم حذف المنتج.');
+                    } catch (err) {
+                        addLog(`خطأ في الحذف: ${err.message}`, 'red');
+                        alert(`خطأ: ${err.message}`);
+                    }
+                }
+            );
         }
 
         async function rePublishAdmin(id) {
@@ -751,6 +766,18 @@
                 addLog('تم تحميل الصورة الجديدة.', 'green');
             };
             reader.readAsDataURL(file);
+        }
+
+        /* ==================================================
+           مودال النجاح (Success Modal)
+           ================================================== */
+        function openSuccessModal(message) {
+            document.getElementById('success-message').textContent = message || 'تمت العملية بنجاح!';
+            document.getElementById('success-modal').classList.add('active');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.remove('active');
         }
 
         /* ==================================================
@@ -806,7 +833,7 @@
             const name = document.getElementById('add-name').value.trim();
             const price = document.getElementById('add-price').value.trim();
             if (!name || !price) {
-                alert('يرجى ملء اسم المنتج والسعر.');
+                openSuccessModal('يرجى ملء اسم المنتج والسعر.');
                 return;
             }
             const features = document.getElementById('add-features').value;
@@ -822,7 +849,7 @@
                         await apiRequest(`/api/products`, 'POST', { name, price: parseFloat(price), features, image });
                         closeAddModal(); loadAllData();
                         addLog('تم إضافة المنتج بنجاح!', 'green');
-                        alert('تم إضافة المنتج بنجاح!');
+                        openSuccessModal('تم إضافة المنتج بنجاح!'); // استخدمنا مودال النجاح
                     } catch (err) {
                         addLog(`خطأ في الإضافة: ${err.message}`, 'red');
                         alert(`خطأ: ${err.message}`);
@@ -834,6 +861,10 @@
         // منع الإرسال التقليدي للنموذج
         document.getElementById('add-form').addEventListener('submit', function(e) {
             e.preventDefault();
+        });
+
+        document.getElementById('success-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeSuccessModal();
         });
 
     </script>

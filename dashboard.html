@@ -216,27 +216,28 @@
             align-items: center;
             letter-spacing: .2px;
         }
-        /* زر نقل إلى متجر */
-        .admin-url-btn {
-            display: inline-flex;
+        /* زر نقل إلى متجر (نفس تصميم زر الدخول) */
+        .admin-link-btn {
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.3rem;
-            padding: 0.3rem 0.8rem;
-            margin-top: 0.5rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            background: var(--accent-soft);
-            color: #cdbdff;
-            border: 1px solid rgba(124,92,250,.32);
+            width: 100%;
+            padding: 0.5rem 1rem;
+            margin-top: 0.8rem;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(180deg, var(--accent-hover), var(--accent));
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
             text-decoration: none;
-            transition: 0.2s;
+            transition: transform .18s var(--ease), filter .18s var(--ease), box-shadow .18s var(--ease);
+            box-shadow: 0 4px 12px -4px rgba(124,92,250,.5);
+            border: none;
             cursor: pointer;
-            width: fit-content;
+            gap: .4rem;
         }
-        .admin-url-btn:hover {
-            background: var(--accent-soft-strong);
+        .admin-link-btn:hover {
+            filter: brightness(1.08);
             transform: translateY(-1px);
         }
         .admin-more-btn { background: rgba(255,255,255,.04); border: 1px solid transparent; color: var(--text-dim); font-size: 1.25rem; cursor: pointer; width: 30px; height: 30px; border-radius: 9px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease); }
@@ -415,7 +416,7 @@
             <div class="modal-header"><span class="modal-title" id="message-title">تنبيه</span><button class="modal-close" onclick="closeMessageModal()">✕</button></div>
             <div style="padding: 1rem 0; color: var(--text); font-size: 1rem; text-align: center;" id="message-content">...</div>
             <div class="form-actions">
-                <button type="button" class="btn-primary" onclick="closeMessageModal()">موافق</button>
+                <button type="button" class="btn-primary" onclick="closeSuccessModal()">موافق</button>
             </div>
         </div>
     </div>
@@ -690,8 +691,8 @@
                     // عرض المتجر في الكارت (فوق العنوان وبلون بنفسجي)
                     const storeDisplay = product.storeId ? `<div class="admin-store-badge" style="margin-bottom: 0.3rem; display: inline-block;">${product.storeId}</div>` : '';
 
-                    // زر نقل إلى متجر
-                    const urlHtml = product.url ? `<a href="${product.url}" target="_blank" rel="noopener noreferrer" class="admin-url-btn">نقل إلى متجر</a>` : '';
+                    // زر نقل إلى متجر (يظهر تحت المميزات وبنفس تصميم زر الدخول)
+                    const urlHtml = product.url ? `<a href="${product.url}" target="_blank" rel="noopener noreferrer" class="admin-link-btn">نقل إلى متجر</a>` : '';
 
                     card.innerHTML = `
                         <div class="admin-card-top">
@@ -709,8 +710,8 @@
                         ${storeDisplay}
                         <div class="admin-card-title">${product.name}</div>
                         <div class="admin-card-price">${product.currency || 'USD'} ${product.price}</div>
-                        ${urlHtml}
                         <div class="admin-card-features">${product.features || ''}</div>
+                        ${urlHtml}
                         <div class="admin-card-meta">آخر تحديث: <span>${new Date(product.lastUpdated).toLocaleTimeString()}</span></div>
                     `;
                     adminGrid.appendChild(card);

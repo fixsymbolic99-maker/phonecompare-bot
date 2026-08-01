@@ -105,15 +105,29 @@
     <script>
         const BACKEND_URL = window.location.origin;
         let token = localStorage.getItem('token');
-        if (!token) { window.location.href = '/'; }
+
+        // إذا التوكن غير موجود أو فاضي، نرجعه للصفحة الرئيسية
+        if (!token || token.trim() === '') {
+            window.location.href = '/';
+        }
 
         async function apiRequest(endpoint, method = 'GET', body = null) {
             const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
+            if (token && token.trim() !== '') {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
             const options = { method, headers };
             if (body) options.body = JSON.stringify(body);
+            
             const res = await fetch(`${BACKEND_URL}${endpoint}`, options);
-            if (res.status === 401) { localStorage.removeItem('token'); window.location.reload(); }
+            
+            // إذا رجع السيرفر 401 (توكن غير صالح)، نمسحه ونرجع للصفحة الرئيسية
+            if (res.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = '/';
+                return;
+            }
+            
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Request failed');
             return data;
@@ -155,7 +169,11 @@
                     grid.appendChild(card);
                 });
                 window._imagesList = images;
-            } catch (err) { alert('فشل تحميل البيانات: ' + err.message); }
+            } catch (err) {
+                // لو حصل خطأ، بنعرضه للمستخدم لكن منقفلش الصفحة
+                console.error(err);
+                alert('فشل تحميل البيانات: ' + err.message);
+            }
         }
 
         function toggleDropdown(id) {

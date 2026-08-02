@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('../config/config');
 
-// ===== تعريف الموديلات (Schemas) =====
 const storeSchema = new mongoose.Schema({
   storeId: { type: String, required: true },
   url: { type: String, default: '' },
@@ -18,7 +17,7 @@ const productSchema = new mongoose.Schema({
   currency: { type: String, default: 'EGP' },
   image: { type: String, default: '' },
   features: { type: String, default: '' },
-  // ===== الحقول الجديدة للتقييم =====
+  category: { type: String, default: 'phones' }, // حقل التصنيف الجديد
   rating: { type: Number, default: 0 },
   reviews: { type: Number, default: 0 },
   lastUpdated: { type: Date, default: Date.now }
@@ -100,7 +99,6 @@ class DatabaseService {
     return await Product.findByIdAndDelete(id);
   }
 
-  // ===== دوال التنظيف التلقائي =====
   async deleteHistoryOlderThan(date) {
     await this.connect();
     return await History.deleteMany({ recordedAt: { $lt: date } });

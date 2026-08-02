@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 const config = require('../config/config');
 
 // ===== تعريف الموديلات (Schemas) =====
+// تم إضافة حقل السعر (price) للمتجر
 const storeSchema = new mongoose.Schema({
   storeId: { type: String, required: true },
-  url: { type: String, default: '' }
+  url: { type: String, default: '' },
+  price: { type: Number, default: 0 } // تمت الإضافة هنا
 });
 
 const productSchema = new mongoose.Schema({

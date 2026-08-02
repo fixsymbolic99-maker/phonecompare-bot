@@ -103,7 +103,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
       name,
       price,
       originalPrice: originalPrice || 0,
-      currency: 'USD', // تغيير من EGP إلى USD
+      currency: 'USD',
       features,
       image,
       stores: stores || [],
@@ -119,7 +119,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-// ===== المسار العام للموقع =====
+// ===== المسار العام للموقع (تم إضافة حقل المميزات هنا) =====
 app.get('/api/public/products', async (req, res) => {
   try {
     await dbService.connect();
@@ -144,7 +144,8 @@ app.get('/api/public/products', async (req, res) => {
       reviews: p.reviews || 0,
       originalPrice: p.originalPrice || 0,
       price: p.price || 0,
-      currency: 'USD' // تغيير من EGP إلى USD
+      currency: 'USD',
+      features: p.features || '' // تم إضافة هذا السطر لكي يظهر الوصف في الموقع
     }));
 
     res.json(formatted);

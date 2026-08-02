@@ -747,8 +747,8 @@
             }
         });
 
-        // === دوال المتاجر المتعددة ===
-        function addStoreRow(containerId, store = { storeId: '', url: '' }) {
+        // === دوال المتاجر المتعددة (تم تعديلها لإضافة حقل السعر) ===
+        function addStoreRow(containerId, store = { storeId: '', url: '', price: '' }) {
             const container = document.getElementById(containerId);
             const row = document.createElement('div');
             row.className = 'store-row';
@@ -758,6 +758,7 @@
             row.innerHTML = `
                 <input type="text" class="store-input" placeholder="اسم المتجر" value="${store.storeId || ''}" style="flex:1;">
                 <input type="text" class="url-input" placeholder="الرابط" value="${store.url || ''}" style="flex:2;">
+                <input type="text" class="price-input" placeholder="السعر (اختياري)" value="${store.price !== undefined && store.price !== '' ? store.price : ''}" style="flex:1;" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')">
                 <button type="button" class="btn-secondary-modal remove-store-btn" style="padding:0.3rem 0.6rem;">✕</button>
             `;
             row.querySelector('.remove-store-btn').addEventListener('click', () => row.remove());
@@ -771,8 +772,11 @@
             rows.forEach(row => {
                 const storeId = row.querySelector('.store-input').value.trim();
                 const url = row.querySelector('.url-input').value.trim();
+                const priceRaw = row.querySelector('.price-input').value.trim();
                 if (storeId || url) {
-                    stores.push({ storeId, url });
+                    // تحويل السعر إلى رقم مع تنظيف الفواصل
+                    const price = priceRaw ? parseFloat(priceRaw.replace(/,/g, '')) : undefined;
+                    stores.push({ storeId, url, price });
                 }
             });
             return stores;
@@ -1018,4 +1022,4 @@
         });
     </script>
 </body>
-</html>
+                                                                                      </html>

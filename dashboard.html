@@ -499,8 +499,8 @@
             <form id="edit-form">
                 <input type="hidden" id="edit-id">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="edit-name" required></div>
-                <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
-                <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
+                <div class="form-group"><label>السعر ($)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
+                <div class="form-group"><label>السعر الأصلي ($ - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 
                 <!-- ===== حقول التقييم ===== -->
                 <div class="form-group"><label>التقييم (من 0 إلى 5)</label><input type="number" id="edit-rating" min="0" max="5" step="0.1"></div>
@@ -552,8 +552,8 @@
             <div class="modal-header"><span class="modal-title">إضافة منتج جديد</span><button class="modal-close" onclick="closeAddModal()">✕</button></div>
             <form id="add-form">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="add-name" required></div>
-                <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
-                <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
+                <div class="form-group"><label>السعر ($)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
+                <div class="form-group"><label>السعر الأصلي ($ - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 
                 <!-- ===== حقول التقييم ===== -->
                 <div class="form-group"><label>التقييم (من 0 إلى 5)</label><input type="number" id="add-rating" min="0" max="5" step="0.1"></div>
@@ -1218,4 +1218,4 @@
         });
     </script>
 </body>
-    </html>
+</html>

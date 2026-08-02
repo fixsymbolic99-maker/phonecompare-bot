@@ -427,9 +427,10 @@
             <form id="edit-form">
                 <input type="hidden" id="edit-id">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="edit-name" required></div>
-                <div class="form-group"><label>السعر (ج.م)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
-                <!-- حقل السعر الأصلي الجديد -->
-                <div class="form-group"><label>السعر الأصلي (ج.م - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
+                <!-- تم تغيير التسمية هنا -->
+                <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
+                <!-- تم تغيير التسمية هنا -->
+                <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 <div class="form-group"><label>المميزات</label><textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>الصورة الحالية</label><div id="current-image-preview"></div></div>
                 <div class="form-group">
@@ -458,9 +459,10 @@
             <div class="modal-header"><span class="modal-title">إضافة منتج جديد</span><button class="modal-close" onclick="closeAddModal()">✕</button></div>
             <form id="add-form">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="add-name" required></div>
-                <div class="form-group"><label>السعر (ج.م)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
-                <!-- حقل السعر الأصلي الجديد -->
-                <div class="form-group"><label>السعر الأصلي (ج.م - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
+                <!-- تم تغيير التسمية هنا -->
+                <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
+                <!-- تم تغيير التسمية هنا -->
+                <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 <div class="form-group"><label>المميزات</label><textarea id="add-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>رفع صورة للمنتج</label>
                     <div class="upload-area" onclick="document.getElementById('add-image-input').click()">
@@ -1022,4 +1024,4 @@
         });
     </script>
 </body>
-                                                                                      </html>
+</html>

@@ -427,11 +427,15 @@
             <form id="edit-form">
                 <input type="hidden" id="edit-id">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="edit-name" required></div>
-                <!-- تم تغيير التسمية هنا -->
                 <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
-                <!-- تم تغيير التسمية هنا -->
                 <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 <div class="form-group"><label>المميزات</label><textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
+                
+                <!-- ===== حقول التقييم الجديدة ===== -->
+                <div class="form-group"><label>التقييم (من 0 إلى 5)</label><input type="number" id="edit-rating" min="0" max="5" step="0.1"></div>
+                <div class="form-group"><label>عدد التقييمات</label><input type="number" id="edit-reviews" min="0"></div>
+                <!-- ================================ -->
+
                 <div class="form-group"><label>الصورة الحالية</label><div id="current-image-preview"></div></div>
                 <div class="form-group">
                     <label>استبدال الصورة (رفع صورة جديدة)</label>
@@ -459,11 +463,15 @@
             <div class="modal-header"><span class="modal-title">إضافة منتج جديد</span><button class="modal-close" onclick="closeAddModal()">✕</button></div>
             <form id="add-form">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="add-name" required></div>
-                <!-- تم تغيير التسمية هنا -->
                 <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
-                <!-- تم تغيير التسمية هنا -->
                 <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 <div class="form-group"><label>المميزات</label><textarea id="add-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
+                
+                <!-- ===== حقول التقييم الجديدة ===== -->
+                <div class="form-group"><label>التقييم (من 0 إلى 5)</label><input type="number" id="add-rating" min="0" max="5" step="0.1"></div>
+                <div class="form-group"><label>عدد التقييمات</label><input type="number" id="add-reviews" min="0"></div>
+                <!-- ================================ -->
+
                 <div class="form-group"><label>رفع صورة للمنتج</label>
                     <div class="upload-area" onclick="document.getElementById('add-image-input').click()">
                         <div class="upload-placeholder"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm9.5 5.5l-2-2.5-2.5 3-2-2.5-3 3.5h11z"/></svg><span>انقر لاختيار صورة</span></div>
@@ -800,6 +808,11 @@
             document.getElementById('edit-price').value = product.price;
             document.getElementById('edit-original-price').value = product.originalPrice || '';
             document.getElementById('edit-features').value = product.features || '';
+            
+            // ===== تعبئة حقول التقييم =====
+            document.getElementById('edit-rating').value = product.rating || '';
+            document.getElementById('edit-reviews').value = product.reviews || '';
+            
             const storesContainer = document.getElementById('edit-stores-container');
             storesContainer.innerHTML = '';
             if (product.stores && product.stores.length > 0) {
@@ -833,8 +846,13 @@
             const originalPriceValue = document.getElementById('edit-original-price').value.replace(/,/g, '');
             const originalPrice = parseFloat(originalPriceValue) || 0;
             const features = document.getElementById('edit-features').value;
+            
+            // ===== استقبال التقييمات =====
+            const rating = parseFloat(document.getElementById('edit-rating').value);
+            const reviews = parseInt(document.getElementById('edit-reviews').value) || 0;
+
             const stores = getStoresFromContainer('edit-stores-container');
-            const body = { name, price, originalPrice, features, stores };
+            const body = { name, price, originalPrice, features, stores, rating, reviews };
             if (tempEditImage && tempEditImage.startsWith('data:image')) {
                 body.image = tempEditImage;
             }
@@ -970,6 +988,11 @@
             document.getElementById('add-price').value = '';
             document.getElementById('add-original-price').value = '';
             document.getElementById('add-features').value = '';
+            
+            // ===== تصفير حقول التقييم =====
+            document.getElementById('add-rating').value = '';
+            document.getElementById('add-reviews').value = '';
+            
             document.getElementById('add-stores-container').innerHTML = '';
             addStoreRow('add-stores-container');
             tempAddImage = null;
@@ -992,8 +1015,13 @@
             const originalPriceValue = document.getElementById('add-original-price').value.replace(/,/g, '');
             const originalPrice = parseFloat(originalPriceValue) || 0;
             const features = document.getElementById('add-features').value;
+            
+            // ===== استقبال التقييمات =====
+            const rating = parseFloat(document.getElementById('add-rating').value);
+            const reviews = parseInt(document.getElementById('add-reviews').value) || 0;
+
             const stores = getStoresFromContainer('add-stores-container');
-            const body = { name, price, originalPrice, features, stores };
+            const body = { name, price, originalPrice, features, stores, rating, reviews };
             if (tempAddImage && tempAddImage.startsWith('data:image')) {
                 body.image = tempAddImage;
             }

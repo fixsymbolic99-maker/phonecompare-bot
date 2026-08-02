@@ -57,7 +57,6 @@ app.get('/api/logs', authMiddleware, async (req, res) => {
   catch (err) { res.json([]); }
 });
 
-// ===== مسارات الإدارة والصور =====
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
@@ -69,7 +68,6 @@ app.get('/api/images', authMiddleware, (req, res) => {
   res.json(files);
 });
 
-// ===== تعديل المنتج =====
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
   const { name, price, features, image, stores } = req.body;
   try {
@@ -94,12 +92,10 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ===== إضافة منتج جديد (تم إصلاح الخطأ) =====
 app.post('/api/products', authMiddleware, async (req, res) => {
   const { name, price, features, image, stores } = req.body;
   try {
     await dbService.connect();
-    // استخدام الموديل المصدر من dbService
     const Product = require('./services/database.service').Product;
     const newProduct = new Product({
       name,
@@ -117,7 +113,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-// ===== المسار العام للموقع =====
+// ===== المسار العام للموقع (تم تعديله لإرسال الرابط) =====
 app.get('/api/public/products', async (req, res) => {
   try {
     await dbService.connect();
@@ -130,9 +126,10 @@ app.get('/api/public/products', async (req, res) => {
       icon: p.image && p.image.startsWith('data:image') 
         ? `<img src="${p.image}" alt="${p.name}" />` 
         : `<div style="font-size:2.1rem;">📱</div>`,
+      // التعديل المهم: إضافة `url` للمتاجر
       stores: (p.stores && p.stores.length > 0) 
-        ? p.stores.map(s => ({ name: s.storeId, price: Math.round(p.price), old: Math.round(p.price * 1.15) }))
-        : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: Math.round(p.price * 1.15) }],
+        ? p.stores.map(s => ({ name: s.storeId, price: Math.round(p.price), old: Math.round(p.price * 1.15), url: s.url }))
+        : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: Math.round(p.price * 1.15), url: '' }],
       rating: 4.5,
       reviews: 100
     }));
@@ -144,7 +141,6 @@ app.get('/api/public/products', async (req, res) => {
   }
 });
 
-// ===== نظام الحذف والتنظيف التلقائي =====
 const cron = require('node-cron');
 cron.schedule('0 3 * * *', async () => {
   logger.info('Starting automatic database cleanup...');
@@ -160,7 +156,6 @@ cron.schedule('0 3 * * *', async () => {
   }
 });
 
-// ===== التشغيل =====
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) scheduler.start();
 
 module.exports = app;

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>PhoneCompare Bot</title>
-    <!-- نفس الـ Style القديم تماماً، ليس هناك تغيير في التصميم -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -430,8 +429,11 @@
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="edit-name" required></div>
                 <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
                 <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
+                
+                <!-- ===== حقول التقييم ===== -->
                 <div class="form-group"><label>التقييم (من 0 إلى 5)</label><input type="number" id="edit-rating" min="0" max="5" step="0.1"></div>
                 <div class="form-group"><label>عدد التقييمات</label><input type="number" id="edit-reviews" min="0"></div>
+
                 <div class="form-group"><label>المميزات</label><textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>الصورة الحالية</label><div id="current-image-preview"></div></div>
                 <div class="form-group">
@@ -445,7 +447,8 @@
                         <img id="edit-image-preview" class="upload-preview">
                     </div>
                 </div>
-                <!-- ===== حقل التصنيف الجديد ===== -->
+
+                <!-- ===== حقل التصنيف ===== -->
                 <div class="form-group"><label>التصنيف (Category)</label>
                     <select id="edit-category">
                         <option value="phones">هواتف</option>
@@ -454,7 +457,7 @@
                         <option value="laptops">لابتوب</option>
                     </select>
                 </div>
-                <!-- ================================ -->
+
                 <div class="form-group"><label>المتاجر والروابط</label>
                     <div id="edit-stores-container"></div>
                     <button type="button" class="btn-secondary-modal" id="edit-add-store-row-btn" style="margin-top:0.5rem;">+ إضافة متجر</button>
@@ -472,8 +475,11 @@
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="add-name" required></div>
                 <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
                 <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
+                
+                <!-- ===== حقول التقييم ===== -->
                 <div class="form-group"><label>التقييم (من 0 إلى 5)</label><input type="number" id="add-rating" min="0" max="5" step="0.1"></div>
                 <div class="form-group"><label>عدد التقييمات</label><input type="number" id="add-reviews" min="0"></div>
+
                 <div class="form-group"><label>المميزات</label><textarea id="add-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>رفع صورة للمنتج</label>
                     <div class="upload-area" onclick="document.getElementById('add-image-input').click()">
@@ -482,7 +488,8 @@
                         <img id="add-image-preview" class="upload-preview" style="display:none;">
                     </div>
                 </div>
-                <!-- ===== حقل التصنيف الجديد ===== -->
+
+                <!-- ===== حقل التصنيف ===== -->
                 <div class="form-group"><label>التصنيف (Category)</label>
                     <select id="add-category">
                         <option value="phones">هواتف</option>
@@ -491,7 +498,7 @@
                         <option value="laptops">لابتوب</option>
                     </select>
                 </div>
-                <!-- ================================ -->
+
                 <div class="form-group"><label>المتاجر والروابط</label>
                     <div id="add-stores-container"></div>
                     <button type="button" class="btn-secondary-modal" id="add-store-row-btn" style="margin-top:0.5rem;">+ إضافة متجر</button>
@@ -822,7 +829,7 @@
             document.getElementById('edit-features').value = product.features || '';
             document.getElementById('edit-rating').value = product.rating || '';
             document.getElementById('edit-reviews').value = product.reviews || '';
-            document.getElementById('edit-category').value = product.category || 'phones';
+            document.getElementById('edit-category').value = product.category || 'phones'; // تعبئة التصنيف
             
             const storesContainer = document.getElementById('edit-stores-container');
             storesContainer.innerHTML = '';
@@ -999,7 +1006,7 @@
             document.getElementById('add-features').value = '';
             document.getElementById('add-rating').value = '';
             document.getElementById('add-reviews').value = '';
-            document.getElementById('add-category').value = 'phones'; // الحقل الجديد
+            document.getElementById('add-category').value = 'phones'; // تعيين التصنيف الافتراضي
             document.getElementById('add-stores-container').innerHTML = '';
             addStoreRow('add-stores-container');
             tempAddImage = null;

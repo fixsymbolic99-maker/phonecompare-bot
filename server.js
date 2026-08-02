@@ -69,7 +69,7 @@ app.get('/api/images', authMiddleware, (req, res) => {
   res.json(files);
 });
 
-// ===== تعديل المنتج (يدعم المصفوفة الجديدة) =====
+// ===== تعديل المنتج =====
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
   const { name, price, features, image, stores } = req.body;
   try {
@@ -80,13 +80,12 @@ app.put('/api/products/:id', authMiddleware, async (req, res) => {
     if (price !== undefined) product.price = price;
     if (features !== undefined) product.features = features;
     if (image !== undefined) product.image = image;
-    if (stores !== undefined) product.stores = stores; // تحديث المصفوفة
+    if (stores !== undefined) product.stores = stores;
     await product.save();
     res.json({ message: 'Product updated' });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ===== حذف منتج =====
 app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   try {
     await dbService.connect();
@@ -95,25 +94,52 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ===== إضافة منتج جديد (يدعم المصفوفة الجديدة) =====
 app.post('/api/products', authMiddleware, async (req, res) => {
   const { name, price, features, image, stores } = req.body;
   try {
     await dbService.connect();
-    // إنشاء منتج جديد مع المصفوفة
     const newProduct = new (require('./services/database.service').Product)({
       name,
       price,
       currency: 'USD',
       features,
       image,
-      stores: stores || [] // إذا لم يتم إرسالها، تكون مصفوفة فارغة
+      stores: stores || []
     });
     await newProduct.save();
     res.status(201).json({ message: 'Product added successfully', id: newProduct._id });
   } catch (err) {
     logger.error(`Error adding product: ${err.message}`);
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ===== المسار الجديد: جلب المنتجات للموقع العام (دون مصادقة) =====
+app.get('/api/public/products', async (req, res) => {
+  try {
+    await dbService.connect();
+    const products = await dbService.getAllProducts();
+    
+    const formatted = products.map(p => ({
+      id: p._id.toString(),
+      name: p.name,
+      category: p.storeId === 'manual' ? 'accessories' : 'phones',
+      // تحويل الصورة إلى HTML (لأن موقع PricePulse يتوقع HTML للصورة)
+      icon: p.image && p.image.startsWith('data:image') 
+        ? `<img src="${p.image}" alt="${p.name}" />` 
+        : `<div style="font-size:2.1rem;">📱</div>`,
+      // تحويل المتاجر إلى التنسيق الذي يفهمه الموقع
+      stores: (p.stores && p.stores.length > 0) 
+        ? p.stores.map(s => ({ name: s.storeId, price: Math.round(p.price), old: Math.round(p.price * 1.15) }))
+        : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: Math.round(p.price * 1.15) }],
+      rating: 4.5,
+      reviews: 100
+    }));
+
+    res.json(formatted);
+  } catch (err) {
+    console.error('Error fetching public products:', err);
+    res.status(500).json({ error: 'Failed to fetch products' });
   }
 });
 

@@ -119,6 +119,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
+// ===== المسار العام للموقع =====
 app.get('/api/public/products', async (req, res) => {
   try {
     await dbService.connect();
@@ -143,7 +144,7 @@ app.get('/api/public/products', async (req, res) => {
       reviews: p.reviews || 0,
       originalPrice: p.originalPrice || 0,
       price: p.price || 0,
-      currency: p.currency || 'EGP'
+      currency: 'EGP' // تم التعديل ليكون EGP ثابتاً بغض النظر عن قاعدة البيانات
     }));
 
     res.json(formatted);
@@ -174,4 +175,4 @@ module.exports = app;
 if (require.main === module) {
   const PORT = config.PORT || 3000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-}
+        }

@@ -203,7 +203,6 @@
             text-overflow: ellipsis;
             line-height: 1.4;
         }
-        /* شارة المتجر */
         .admin-store-badge {
             padding: .2rem .7rem;
             border-radius: 20px;
@@ -216,7 +215,6 @@
             align-items: center;
             letter-spacing: .2px;
         }
-        /* زر نقل إلى متجر - تم ضبط المسافات والنص في JS */
         .admin-link-btn {
             display: flex;
             align-items: center;
@@ -429,7 +427,9 @@
             <form id="edit-form">
                 <input type="hidden" id="edit-id">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="edit-name" required></div>
-                <div class="form-group"><label>السعر (USD)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" required></div>
+                <div class="form-group"><label>السعر (ج.م)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" required></div>
+                <!-- حقل السعر الأصلي الجديد -->
+                <div class="form-group"><label>السعر الأصلي (ج.م - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 <div class="form-group"><label>المميزات</label><textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>الصورة الحالية</label><div id="current-image-preview"></div></div>
                 <div class="form-group">
@@ -443,12 +443,8 @@
                         <img id="edit-image-preview" class="upload-preview">
                     </div>
                 </div>
-                <!-- حقل المتاجر المتعددة (تعديل) -->
-                <div class="form-group">
-                    <label>المتاجر والروابط</label>
-                    <div id="edit-stores-container">
-                        <!-- يتم تعبئتها بواسطة JS -->
-                    </div>
+                <div class="form-group"><label>المتاجر والروابط</label>
+                    <div id="edit-stores-container"></div>
                     <button type="button" class="btn-secondary-modal" id="edit-add-store-row-btn" style="margin-top:0.5rem;">+ إضافة متجر</button>
                 </div>
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAdminModal()">إلغاء</button><button type="submit" class="btn-primary">حفظ التعديلات</button></div>
@@ -462,7 +458,9 @@
             <div class="modal-header"><span class="modal-title">إضافة منتج جديد</span><button class="modal-close" onclick="closeAddModal()">✕</button></div>
             <form id="add-form">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="add-name" required></div>
-                <div class="form-group"><label>السعر (USD)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" required></div>
+                <div class="form-group"><label>السعر (ج.م)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" required></div>
+                <!-- حقل السعر الأصلي الجديد -->
+                <div class="form-group"><label>السعر الأصلي (ج.م - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 <div class="form-group"><label>المميزات</label><textarea id="add-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>رفع صورة للمنتج</label>
                     <div class="upload-area" onclick="document.getElementById('add-image-input').click()">
@@ -471,15 +469,10 @@
                         <img id="add-image-preview" class="upload-preview" style="display:none;">
                     </div>
                 </div>
-                <!-- حقل المتاجر المتعددة (إضافة) -->
-                <div class="form-group">
-                    <label>المتاجر والروابط</label>
-                    <div id="add-stores-container">
-                        <!-- صف افتراضي واحد -->
-                    </div>
+                <div class="form-group"><label>المتاجر والروابط</label>
+                    <div id="add-stores-container"></div>
                     <button type="button" class="btn-secondary-modal" id="add-store-row-btn" style="margin-top:0.5rem;">+ إضافة متجر</button>
                 </div>
-                
                 <div class="form-actions"><button type="button" class="btn-secondary-modal" onclick="closeAddModal()">إلغاء</button><button type="submit" class="btn-primary" id="add-submit-btn">إضافة المنتج</button></div>
             </form>
         </div>
@@ -523,7 +516,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             loginScreen.style.display = 'flex';
             mainContent.style.display = 'none';
-            // إضافة صف افتراضي للمتاجر عند فتح مودال الإضافة
             setTimeout(() => {
                 if(document.getElementById('add-modal').classList.contains('active')) {
                     addStoreRow('add-stores-container');
@@ -620,7 +612,7 @@
                     products.forEach(p => {
                         const tr = document.createElement('tr');
                         const storeName = p.storeId.charAt(0).toUpperCase() + p.storeId.slice(1);
-                        tr.innerHTML = `<td>${p.name}</td><td>${storeName}</td><td>${p.currency === 'USD' ? '$' : ''}${p.price.toFixed(2)}</td><td><span class="badge gray">مقارن</span></td>`;
+                        tr.innerHTML = `<td>${p.name}</td><td>${storeName}</td><td>${p.currency === 'EGP' ? 'ج.م ' : ''}${p.price.toFixed(2)}</td><td><span class="badge gray">مقارن</span></td>`;
                         productsTbody.appendChild(tr);
                     });
                 }
@@ -704,13 +696,12 @@
                         </div>`;
                     }
 
-                    // عرض المتاجر المتعددة مع مسافات بين الأزرار
+                    const storeDisplay = product.storeId ? `<div class="admin-store-badge" style="margin-bottom: 0.3rem; display: inline-block;">${product.storeId}</div>` : '';
                     let storesHtml = '';
                     if (product.stores && product.stores.length > 0) {
                         const storeLinks = product.stores.map(store => {
                             return `<a href="${store.url}" target="_blank" class="admin-link-btn" style="margin-top:0.3rem; margin-bottom:0.3rem; display:inline-block; width:auto; margin-left:0.5rem;">إنتقل إلى ${store.storeId}</a>`;
                         }).join('');
-                        // حاوية لتجميع الأزرار بمسافة ثابتة بينها
                         storesHtml = `<div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">${storeLinks}</div>`;
                     }
 
@@ -727,8 +718,9 @@
                             </div>
                         </div>
                         ${imageHtml}
+                        ${storeDisplay}
                         <div class="admin-card-title">${product.name}</div>
-                        <div class="admin-card-price">${product.currency || 'USD'} ${product.price}</div>
+                        <div class="admin-card-price">${product.currency || 'EGP'} ${product.price}</div>
                         <div class="admin-card-features">${product.features || ''}</div>
                         ${storesHtml}
                         <div class="admin-card-meta">آخر تحديث: <span>${new Date(product.lastUpdated).toLocaleTimeString()}</span></div>
@@ -786,12 +778,9 @@
             return stores;
         }
 
-        // ربط الأزرار في مودال الإضافة
         document.getElementById('add-store-row-btn').addEventListener('click', () => {
             addStoreRow('add-stores-container');
         });
-
-        // ربط الأزرار في مودال التعديل
         document.getElementById('edit-add-store-row-btn').addEventListener('click', () => {
             addStoreRow('edit-stores-container');
         });
@@ -803,20 +792,17 @@
             document.getElementById('edit-id').value = product._id || product.id;
             document.getElementById('edit-name').value = product.name;
             document.getElementById('edit-price').value = product.price;
+            document.getElementById('edit-original-price').value = product.originalPrice || '';
             document.getElementById('edit-features').value = product.features || '';
-            
-            // تعبئة المتاجر
             const storesContainer = document.getElementById('edit-stores-container');
             storesContainer.innerHTML = '';
             if (product.stores && product.stores.length > 0) {
                 product.stores.forEach(store => addStoreRow('edit-stores-container', store));
             } else {
-                // دعم للمنتجات القديمة
                 if (product.storeId || product.url) {
                     addStoreRow('edit-stores-container', { storeId: product.storeId, url: product.url });
                 }
             }
-
             const currentPreview = document.getElementById('current-image-preview');
             if (product.image && product.image.startsWith('data:image')) {
                 currentPreview.innerHTML = `<img src="${product.image}" style="max-width:100%; max-height:100px; border-radius:8px; margin-top:8px;">`;
@@ -836,14 +822,13 @@
             const id = document.getElementById('edit-id').value;
             const name = document.getElementById('edit-name').value;
             const price = parseFloat(document.getElementById('edit-price').value);
+            const originalPrice = parseFloat(document.getElementById('edit-original-price').value) || 0;
             const features = document.getElementById('edit-features').value;
             const stores = getStoresFromContainer('edit-stores-container');
-            
-            const body = { name, price, features, stores };
+            const body = { name, price, originalPrice, features, stores };
             if (tempEditImage && tempEditImage.startsWith('data:image')) {
                 body.image = tempEditImage;
             }
-
             try {
                 await apiRequest(`/api/products/${id}`, 'PUT', body);
                 closeAdminModal(); loadAllData();
@@ -960,7 +945,6 @@
             }
             closeConfirmModal();
         });
-
         document.getElementById('confirm-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeConfirmModal();
         });
@@ -975,9 +959,10 @@
         function openAddProductModal() {
             document.getElementById('add-name').value = '';
             document.getElementById('add-price').value = '';
+            document.getElementById('add-original-price').value = '';
             document.getElementById('add-features').value = '';
             document.getElementById('add-stores-container').innerHTML = '';
-            addStoreRow('add-stores-container'); // إضافة صف أول فارغ
+            addStoreRow('add-stores-container');
             tempAddImage = null;
             document.getElementById('add-image-preview').style.display = 'none';
             document.getElementById('add-image-input').value = '';
@@ -992,17 +977,16 @@
                 openSuccessModal('يرجى ملء اسم المنتج والسعر.');
                 return;
             }
+            const originalPrice = parseFloat(document.getElementById('add-original-price').value) || 0;
             const features = document.getElementById('add-features').value;
             const stores = getStoresFromContainer('add-stores-container');
-            
-            const body = { name, price: parseFloat(price), features, stores };
+            const body = { name, price: parseFloat(price), originalPrice, features, stores };
             if (tempAddImage && tempAddImage.startsWith('data:image')) {
                 body.image = tempAddImage;
             }
-
             openConfirmModal(
                 'تأكيد إضافة المنتج',
-                `هل أنت متأكد من إضافة المنتج "${name}" بسعر ${price} USD؟`,
+                `هل أنت متأكد من إضافة المنتج "${name}" بسعر ${price} ج.م؟`,
                 async function() {
                     try {
                         await apiRequest(`/api/products`, 'POST', body);
@@ -1016,19 +1000,15 @@
                 }
             );
         });
-
         document.getElementById('add-form').addEventListener('submit', function(e) {
             e.preventDefault();
         });
-
         document.getElementById('success-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeSuccessModal();
         });
-
         document.getElementById('message-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeMessageModal();
         });
-
     </script>
 </body>
 </html>

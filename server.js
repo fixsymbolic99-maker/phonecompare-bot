@@ -103,7 +103,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
       name,
       price,
       originalPrice: originalPrice || 0,
-      currency: 'EGP',
+      currency: 'USD', // تغيير من EGP إلى USD
       features,
       image,
       stores: stores || [],
@@ -144,7 +144,7 @@ app.get('/api/public/products', async (req, res) => {
       reviews: p.reviews || 0,
       originalPrice: p.originalPrice || 0,
       price: p.price || 0,
-      currency: 'EGP' // تم التعديل ليكون EGP ثابتاً بغض النظر عن قاعدة البيانات
+      currency: 'USD' // تغيير من EGP إلى USD
     }));
 
     res.json(formatted);
@@ -175,4 +175,4 @@ module.exports = app;
 if (require.main === module) {
   const PORT = config.PORT || 3000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-        }
+}

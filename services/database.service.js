@@ -13,7 +13,8 @@ const productSchema = new mongoose.Schema({
   stores: [storeSchema],
   name: { type: String, required: true },
   price: { type: Number, required: true },
-  currency: { type: String, default: 'USD' },
+  originalPrice: { type: Number, default: 0 }, // السعر الأصلي الجديد
+  currency: { type: String, default: 'EGP' }, // العملة الافتراضية جنيه مصري
   image: { type: String, default: '' },
   features: { type: String, default: '' },
   lastUpdated: { type: Date, default: Date.now }
@@ -22,7 +23,7 @@ const productSchema = new mongoose.Schema({
 const historySchema = new mongoose.Schema({
   productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
   price: { type: Number, required: true },
-  currency: { type: String, default: 'USD' },
+  currency: { type: String, default: 'EGP' },
   changeType: { type: String, default: 'update' },
   recordedAt: { type: Date, default: Date.now }
 });
@@ -54,7 +55,7 @@ class DatabaseService {
     return await Product.findById(id);
   }
 
-  async upsertProduct(storeId, name, price, url, currency = 'USD') {
+  async upsertProduct(storeId, name, price, url, currency = 'EGP') {
     await this.connect();
     let product = await Product.findOne({ storeId });
     if (product) {
@@ -125,4 +126,4 @@ class DatabaseService {
 }
 
 module.exports = new DatabaseService();
-module.exports.Product = Product; // التعديل المهم هنا
+module.exports.Product = Product;

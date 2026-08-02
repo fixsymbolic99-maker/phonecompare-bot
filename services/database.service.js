@@ -8,9 +8,9 @@ const storeSchema = new mongoose.Schema({
 });
 
 const productSchema = new mongoose.Schema({
-  storeId: { type: String, default: 'manual' }, // سنبقيه للتوافق
-  url: { type: String, default: '' }, // سنبقيه للتوافق
-  stores: [storeSchema], // المصفوفة الجديدة
+  storeId: { type: String, default: 'manual' },
+  url: { type: String, default: '' },
+  stores: [storeSchema],
   name: { type: String, required: true },
   price: { type: Number, required: true },
   currency: { type: String, default: 'USD' },
@@ -55,7 +55,6 @@ class DatabaseService {
   }
 
   async upsertProduct(storeId, name, price, url, currency = 'USD') {
-    // هذه الدالة ستبقى للتوافق، لكننا سنعتمد على الجديدة
     await this.connect();
     let product = await Product.findOne({ storeId });
     if (product) {
@@ -126,3 +125,4 @@ class DatabaseService {
 }
 
 module.exports = new DatabaseService();
+module.exports.Product = Product; // التعديل المهم هنا

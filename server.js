@@ -119,7 +119,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-// ===== المسار العام للموقع (تم إضافة حقل المميزات هنا) =====
+// ===== المسار العام للموقع =====
 app.get('/api/public/products', async (req, res) => {
   try {
     await dbService.connect();
@@ -135,17 +135,17 @@ app.get('/api/public/products', async (req, res) => {
       stores: (p.stores && p.stores.length > 0) 
         ? p.stores.map(s => ({ 
             name: s.storeId, 
-            price: (s.price !== undefined && s.price > 0) ? Math.round(s.price) : Math.round(p.price), 
-            old: p.originalPrice > 0 ? Math.round(p.originalPrice) : 0, 
+            price: (s.price !== undefined && s.price > 0) ? s.price : p.price, // تم إزالة Math.round()
+            old: p.originalPrice > 0 ? p.originalPrice : 0, // تم إزالة Math.round()
             url: s.url 
           }))
-        : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: p.originalPrice > 0 ? Math.round(p.originalPrice) : 0, url: '' }],
+        : [{ name: p.storeId || 'Store', price: p.price, old: p.originalPrice > 0 ? p.originalPrice : 0, url: '' }],
       rating: p.rating || 0,
       reviews: p.reviews || 0,
       originalPrice: p.originalPrice || 0,
       price: p.price || 0,
       currency: 'USD',
-      features: p.features || '' // تم إضافة هذا السطر لكي يظهر الوصف في الموقع
+      features: p.features || ''
     }));
 
     res.json(formatted);

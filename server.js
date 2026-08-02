@@ -13,9 +13,10 @@ const storesList = require('./config/stores');
 
 const app = express();
 
+// ===== الإعدادات الجديدة للسماح لأي سيرفر بالاتصال =====
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(cors());
+app.use(cors({ origin: '*' })); // التغيير هنا: السماح لأي دومين بالاتصال بالـ API
 app.use(express.static(path.join(__dirname)));
 
 // ===== مسارات عامة =====
@@ -114,7 +115,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-// ===== المسار الجديد: جلب المنتجات للموقع العام (دون مصادقة) =====
+// ===== المسار العام للموقع =====
 app.get('/api/public/products', async (req, res) => {
   try {
     await dbService.connect();
@@ -124,11 +125,9 @@ app.get('/api/public/products', async (req, res) => {
       id: p._id.toString(),
       name: p.name,
       category: p.storeId === 'manual' ? 'accessories' : 'phones',
-      // تحويل الصورة إلى HTML (لأن موقع PricePulse يتوقع HTML للصورة)
       icon: p.image && p.image.startsWith('data:image') 
         ? `<img src="${p.image}" alt="${p.name}" />` 
         : `<div style="font-size:2.1rem;">📱</div>`,
-      // تحويل المتاجر إلى التنسيق الذي يفهمه الموقع
       stores: (p.stores && p.stores.length > 0) 
         ? p.stores.map(s => ({ name: s.storeId, price: Math.round(p.price), old: Math.round(p.price * 1.15) }))
         : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: Math.round(p.price * 1.15) }],

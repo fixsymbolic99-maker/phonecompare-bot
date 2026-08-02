@@ -27,7 +27,6 @@ app.post('/api/auth/login', (req, res) => {
   res.json({ token });
 });
 
-// ===== مسارات التحكم في البوت =====
 app.use('/api/proxy', authMiddleware);
 
 app.post('/api/proxy/start-all', async (req, res) => {
@@ -46,7 +45,6 @@ app.post('/api/proxy/start/:storeId', async (req, res) => {
 });
 
 app.get('/api/proxy/status', (req, res) => res.json(worker.getStatus()));
-
 app.get('/api/stores', authMiddleware, (req, res) => res.json(storesList.map(({ id, name }) => ({ id, name }))));
 app.get('/api/products', authMiddleware, async (req, res) => {
   try { res.json(await dbService.getAllProducts()); }
@@ -69,13 +67,14 @@ app.get('/api/images', authMiddleware, (req, res) => {
 });
 
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
-  const { name, price, features, image, stores } = req.body;
+  const { name, price, originalPrice, features, image, stores } = req.body;
   try {
     await dbService.connect();
     const product = await dbService.getProductById(req.params.id);
     if (!product) return res.status(404).json({ error: 'Product not found' });
     if (name !== undefined) product.name = name;
     if (price !== undefined) product.price = price;
+    if (originalPrice !== undefined) product.originalPrice = originalPrice;
     if (features !== undefined) product.features = features;
     if (image !== undefined) product.image = image;
     if (stores !== undefined) product.stores = stores;
@@ -93,14 +92,15 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
 });
 
 app.post('/api/products', authMiddleware, async (req, res) => {
-  const { name, price, features, image, stores } = req.body;
+  const { name, price, originalPrice, features, image, stores } = req.body;
   try {
     await dbService.connect();
     const Product = require('./services/database.service').Product;
     const newProduct = new Product({
       name,
       price,
-      currency: 'USD',
+      originalPrice: originalPrice || 0,
+      currency: 'EGP',
       features,
       image,
       stores: stores || []
@@ -113,7 +113,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-// ===== المسار العام للموقع (تم تعديله لإرسال الرابط) =====
+// ===== المسار العام للموقع (مع السعر الأصلي والعملة المصرية) =====
 app.get('/api/public/products', async (req, res) => {
   try {
     await dbService.connect();
@@ -126,10 +126,15 @@ app.get('/api/public/products', async (req, res) => {
       icon: p.image && p.image.startsWith('data:image') 
         ? `<img src="${p.image}" alt="${p.name}" />` 
         : `<div style="font-size:2.1rem;">📱</div>`,
-      // التعديل المهم: إضافة `url` للمتاجر
+      // تعديل: إرسال السعر الأصلي
       stores: (p.stores && p.stores.length > 0) 
-        ? p.stores.map(s => ({ name: s.storeId, price: Math.round(p.price), old: Math.round(p.price * 1.15), url: s.url }))
-        : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: Math.round(p.price * 1.15), url: '' }],
+        ? p.stores.map(s => ({ 
+            name: s.storeId, 
+            price: Math.round(p.price), 
+            old: p.originalPrice > 0 ? Math.round(p.originalPrice) : 0, 
+            url: s.url 
+          }))
+        : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: p.originalPrice > 0 ? Math.round(p.originalPrice) : 0, url: '' }],
       rating: 4.5,
       reviews: 100
     }));

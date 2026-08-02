@@ -13,10 +13,9 @@ const storesList = require('./config/stores');
 
 const app = express();
 
-// ===== الإعدادات الجديدة للسماح لأي سيرفر بالاتصال =====
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(cors({ origin: '*' })); // التغيير هنا: السماح لأي دومين بالاتصال بالـ API
+app.use(cors({ origin: '*' }));
 app.use(express.static(path.join(__dirname)));
 
 // ===== مسارات عامة =====
@@ -95,11 +94,14 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ===== إضافة منتج جديد (تم إصلاح الخطأ) =====
 app.post('/api/products', authMiddleware, async (req, res) => {
   const { name, price, features, image, stores } = req.body;
   try {
     await dbService.connect();
-    const newProduct = new (require('./services/database.service').Product)({
+    // استخدام الموديل المصدر من dbService
+    const Product = require('./services/database.service').Product;
+    const newProduct = new Product({
       name,
       price,
       currency: 'USD',

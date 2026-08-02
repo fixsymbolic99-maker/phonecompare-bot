@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>PhoneCompare Bot</title>
+    <!-- نفس الـ Style القديم تماماً، ليس هناك تغيير في التصميم -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -429,13 +430,9 @@
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="edit-name" required></div>
                 <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
                 <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
-                <div class="form-group"><label>المميزات</label><textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
-                
-                <!-- ===== حقول التقييم الجديدة ===== -->
                 <div class="form-group"><label>التقييم (من 0 إلى 5)</label><input type="number" id="edit-rating" min="0" max="5" step="0.1"></div>
                 <div class="form-group"><label>عدد التقييمات</label><input type="number" id="edit-reviews" min="0"></div>
-                <!-- ================================ -->
-
+                <div class="form-group"><label>المميزات</label><textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>الصورة الحالية</label><div id="current-image-preview"></div></div>
                 <div class="form-group">
                     <label>استبدال الصورة (رفع صورة جديدة)</label>
@@ -448,6 +445,16 @@
                         <img id="edit-image-preview" class="upload-preview">
                     </div>
                 </div>
+                <!-- ===== حقل التصنيف الجديد ===== -->
+                <div class="form-group"><label>التصنيف (Category)</label>
+                    <select id="edit-category">
+                        <option value="phones">هواتف</option>
+                        <option value="watches">ساعات ذكية</option>
+                        <option value="accessories">إكسسوارات</option>
+                        <option value="laptops">لابتوب</option>
+                    </select>
+                </div>
+                <!-- ================================ -->
                 <div class="form-group"><label>المتاجر والروابط</label>
                     <div id="edit-stores-container"></div>
                     <button type="button" class="btn-secondary-modal" id="edit-add-store-row-btn" style="margin-top:0.5rem;">+ إضافة متجر</button>
@@ -465,13 +472,9 @@
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="add-name" required></div>
                 <div class="form-group"><label>السعر (EGP)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
                 <div class="form-group"><label>السعر الأصلي (EGP - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
-                <div class="form-group"><label>المميزات</label><textarea id="add-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
-                
-                <!-- ===== حقول التقييم الجديدة ===== -->
                 <div class="form-group"><label>التقييم (من 0 إلى 5)</label><input type="number" id="add-rating" min="0" max="5" step="0.1"></div>
                 <div class="form-group"><label>عدد التقييمات</label><input type="number" id="add-reviews" min="0"></div>
-                <!-- ================================ -->
-
+                <div class="form-group"><label>المميزات</label><textarea id="add-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>رفع صورة للمنتج</label>
                     <div class="upload-area" onclick="document.getElementById('add-image-input').click()">
                         <div class="upload-placeholder"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm9.5 5.5l-2-2.5-2.5 3-2-2.5-3 3.5h11z"/></svg><span>انقر لاختيار صورة</span></div>
@@ -479,6 +482,16 @@
                         <img id="add-image-preview" class="upload-preview" style="display:none;">
                     </div>
                 </div>
+                <!-- ===== حقل التصنيف الجديد ===== -->
+                <div class="form-group"><label>التصنيف (Category)</label>
+                    <select id="add-category">
+                        <option value="phones">هواتف</option>
+                        <option value="watches">ساعات ذكية</option>
+                        <option value="accessories">إكسسوارات</option>
+                        <option value="laptops">لابتوب</option>
+                    </select>
+                </div>
+                <!-- ================================ -->
                 <div class="form-group"><label>المتاجر والروابط</label>
                     <div id="add-stores-container"></div>
                     <button type="button" class="btn-secondary-modal" id="add-store-row-btn" style="margin-top:0.5rem;">+ إضافة متجر</button>
@@ -757,7 +770,7 @@
             }
         });
 
-        // === دوال المتاجر المتعددة (تم تعديلها لإضافة حقل السعر) ===
+        // === دوال المتاجر المتعددة ===
         function addStoreRow(containerId, store = { storeId: '', url: '', price: '' }) {
             const container = document.getElementById(containerId);
             const row = document.createElement('div');
@@ -784,7 +797,6 @@
                 const url = row.querySelector('.url-input').value.trim();
                 const priceRaw = row.querySelector('.price-input').value.trim();
                 if (storeId || url) {
-                    // تحويل السعر إلى رقم مع تنظيف الفواصل
                     const price = priceRaw ? parseFloat(priceRaw.replace(/,/g, '')) : undefined;
                     stores.push({ storeId, url, price });
                 }
@@ -808,10 +820,9 @@
             document.getElementById('edit-price').value = product.price;
             document.getElementById('edit-original-price').value = product.originalPrice || '';
             document.getElementById('edit-features').value = product.features || '';
-            
-            // ===== تعبئة حقول التقييم =====
             document.getElementById('edit-rating').value = product.rating || '';
             document.getElementById('edit-reviews').value = product.reviews || '';
+            document.getElementById('edit-category').value = product.category || 'phones';
             
             const storesContainer = document.getElementById('edit-stores-container');
             storesContainer.innerHTML = '';
@@ -840,19 +851,17 @@
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
             const name = document.getElementById('edit-name').value;
-            // تنظيف السعر: إزالة الفواصل
             const priceValue = document.getElementById('edit-price').value.replace(/,/g, '');
             const price = parseFloat(priceValue);
             const originalPriceValue = document.getElementById('edit-original-price').value.replace(/,/g, '');
             const originalPrice = parseFloat(originalPriceValue) || 0;
             const features = document.getElementById('edit-features').value;
-            
-            // ===== استقبال التقييمات =====
             const rating = parseFloat(document.getElementById('edit-rating').value);
             const reviews = parseInt(document.getElementById('edit-reviews').value) || 0;
+            const category = document.getElementById('edit-category').value; // الحقل الجديد
 
             const stores = getStoresFromContainer('edit-stores-container');
-            const body = { name, price, originalPrice, features, stores, rating, reviews };
+            const body = { name, price, originalPrice, features, stores, rating, reviews, category };
             if (tempEditImage && tempEditImage.startsWith('data:image')) {
                 body.image = tempEditImage;
             }
@@ -988,11 +997,9 @@
             document.getElementById('add-price').value = '';
             document.getElementById('add-original-price').value = '';
             document.getElementById('add-features').value = '';
-            
-            // ===== تصفير حقول التقييم =====
             document.getElementById('add-rating').value = '';
             document.getElementById('add-reviews').value = '';
-            
+            document.getElementById('add-category').value = 'phones'; // الحقل الجديد
             document.getElementById('add-stores-container').innerHTML = '';
             addStoreRow('add-stores-container');
             tempAddImage = null;
@@ -1009,19 +1016,17 @@
                 openSuccessModal('يرجى ملء اسم المنتج والسعر.');
                 return;
             }
-            // تنظيف السعر: إزالة الفواصل
             const priceValue = priceRaw.replace(/,/g, '');
             const price = parseFloat(priceValue);
             const originalPriceValue = document.getElementById('add-original-price').value.replace(/,/g, '');
             const originalPrice = parseFloat(originalPriceValue) || 0;
             const features = document.getElementById('add-features').value;
-            
-            // ===== استقبال التقييمات =====
             const rating = parseFloat(document.getElementById('add-rating').value);
             const reviews = parseInt(document.getElementById('add-reviews').value) || 0;
+            const category = document.getElementById('add-category').value; // الحقل الجديد
 
             const stores = getStoresFromContainer('add-stores-container');
-            const body = { name, price, originalPrice, features, stores, rating, reviews };
+            const body = { name, price, originalPrice, features, stores, rating, reviews, category };
             if (tempAddImage && tempAddImage.startsWith('data:image')) {
                 body.image = tempAddImage;
             }

@@ -292,6 +292,17 @@
             .admin-header-actions { width: 100%; }
             .admin-header-actions .btn-secondary, .admin-header-actions .btn-purple { flex: 1; justify-content: center; }
         }
+
+        /* --- تنسيقات إضافية لحقول التصنيف (Select) --- */
+        .category-select {
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239d9daa' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: left 1rem center !important; /* السهم على اليسار داخل الحقل */
+            padding-left: 2.5rem !important; /* مساحة للسهم في اليسار */
+            padding-right: 0.9rem !important;
+        }
     </style>
 </head>
 <body>
@@ -450,7 +461,7 @@
 
                 <!-- ===== حقل التصنيف ===== -->
                 <div class="form-group"><label>التصنيف (Category)</label>
-                    <select id="edit-category">
+                    <select id="edit-category" class="category-select">
                         <option value="phones">هواتف</option>
                         <option value="watches">ساعات ذكية</option>
                         <option value="accessories">إكسسوارات</option>
@@ -491,7 +502,7 @@
 
                 <!-- ===== حقل التصنيف ===== -->
                 <div class="form-group"><label>التصنيف (Category)</label>
-                    <select id="add-category">
+                    <select id="add-category" class="category-select">
                         <option value="phones">هواتف</option>
                         <option value="watches">ساعات ذكية</option>
                         <option value="accessories">إكسسوارات</option>
@@ -1064,4 +1075,4 @@
         });
     </script>
 </body>
-</html>
+                </html>

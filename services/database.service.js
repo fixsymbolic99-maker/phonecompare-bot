@@ -14,10 +14,10 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
   originalPrice: { type: Number, default: 0 },
-  currency: { type: String, default: 'EGP' },
+  currency: { type: String, default: 'USD' }, // تغيير من EGP إلى USD
   image: { type: String, default: '' },
   features: { type: String, default: '' },
-  category: { type: String, default: 'phones' }, // حقل التصنيف الجديد
+  category: { type: String, default: 'phones' },
   rating: { type: Number, default: 0 },
   reviews: { type: Number, default: 0 },
   lastUpdated: { type: Date, default: Date.now }
@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema({
 const historySchema = new mongoose.Schema({
   productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
   price: { type: Number, required: true },
-  currency: { type: String, default: 'EGP' },
+  currency: { type: String, default: 'USD' }, // تغيير من EGP إلى USD
   changeType: { type: String, default: 'update' },
   recordedAt: { type: Date, default: Date.now }
 });
@@ -58,7 +58,7 @@ class DatabaseService {
     return await Product.findById(id);
   }
 
-  async upsertProduct(storeId, name, price, url, currency = 'EGP') {
+  async upsertProduct(storeId, name, price, url, currency = 'USD') { // تغيير من EGP إلى USD
     await this.connect();
     let product = await Product.findOne({ storeId });
     if (product) {

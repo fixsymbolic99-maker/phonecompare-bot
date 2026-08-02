@@ -67,8 +67,7 @@ app.get('/api/images', authMiddleware, (req, res) => {
 });
 
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
-  // استقبال الحقول الجديدة للتقييم
-  const { name, price, originalPrice, features, image, stores, rating, reviews } = req.body;
+  const { name, price, originalPrice, features, image, stores, rating, reviews, category } = req.body;
   try {
     await dbService.connect();
     const product = await dbService.getProductById(req.params.id);
@@ -79,9 +78,9 @@ app.put('/api/products/:id', authMiddleware, async (req, res) => {
     if (features !== undefined) product.features = features;
     if (image !== undefined) product.image = image;
     if (stores !== undefined) product.stores = stores;
-    // حفظ التقييمات
     if (rating !== undefined) product.rating = rating;
     if (reviews !== undefined) product.reviews = reviews;
+    if (category !== undefined) product.category = category;
     await product.save();
     res.json({ message: 'Product updated' });
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -96,8 +95,7 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
 });
 
 app.post('/api/products', authMiddleware, async (req, res) => {
-  // استقبال الحقول الجديدة للتقييم
-  const { name, price, originalPrice, features, image, stores, rating, reviews } = req.body;
+  const { name, price, originalPrice, features, image, stores, rating, reviews, category } = req.body;
   try {
     await dbService.connect();
     const Product = require('./services/database.service').Product;
@@ -109,8 +107,9 @@ app.post('/api/products', authMiddleware, async (req, res) => {
       features,
       image,
       stores: stores || [],
-      rating: rating || 0, // إضافة التقييم
-      reviews: reviews || 0 // إضافة عدد التقييمات
+      rating: rating || 0,
+      reviews: reviews || 0,
+      category: category || 'phones'
     });
     await newProduct.save();
     res.status(201).json({ message: 'Product added successfully', id: newProduct._id });
@@ -120,7 +119,6 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-// ===== المسار العام للموقع =====
 app.get('/api/public/products', async (req, res) => {
   try {
     await dbService.connect();
@@ -129,7 +127,7 @@ app.get('/api/public/products', async (req, res) => {
     const formatted = products.map(p => ({
       id: p._id.toString(),
       name: p.name,
-      category: p.storeId === 'manual' ? 'accessories' : 'phones',
+      category: p.category || 'phones',
       icon: p.image && p.image.startsWith('data:image') 
         ? `<img src="${p.image}" alt="${p.name}" />` 
         : `<div style="font-size:2.1rem;">📱</div>`,
@@ -141,8 +139,11 @@ app.get('/api/public/products', async (req, res) => {
             url: s.url 
           }))
         : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: p.originalPrice > 0 ? Math.round(p.originalPrice) : 0, url: '' }],
-      rating: p.rating || 0, // إرسال التقييم الحقيقي
-      reviews: p.reviews || 0 // إرسال عدد التقييمات الحقيقي
+      rating: p.rating || 0,
+      reviews: p.reviews || 0,
+      originalPrice: p.originalPrice || 0,
+      price: p.price || 0,
+      currency: p.currency || 'EGP'
     }));
 
     res.json(formatted);

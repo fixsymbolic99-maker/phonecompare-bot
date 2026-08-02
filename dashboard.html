@@ -427,9 +427,9 @@
             <form id="edit-form">
                 <input type="hidden" id="edit-id">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="edit-name" required></div>
-                <div class="form-group"><label>السعر (ج.م)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" required></div>
+                <div class="form-group"><label>السعر (ج.م)</label><input type="tel" id="edit-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
                 <!-- حقل السعر الأصلي الجديد -->
-                <div class="form-group"><label>السعر الأصلي (ج.م - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
+                <div class="form-group"><label>السعر الأصلي (ج.م - اختياري)</label><input type="tel" id="edit-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 <div class="form-group"><label>المميزات</label><textarea id="edit-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>الصورة الحالية</label><div id="current-image-preview"></div></div>
                 <div class="form-group">
@@ -458,9 +458,9 @@
             <div class="modal-header"><span class="modal-title">إضافة منتج جديد</span><button class="modal-close" onclick="closeAddModal()">✕</button></div>
             <form id="add-form">
                 <div class="form-group"><label>اسم المنتج</label><input type="text" id="add-name" required></div>
-                <div class="form-group"><label>السعر (ج.م)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" required></div>
+                <div class="form-group"><label>السعر (ج.م)</label><input type="tel" id="add-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" required></div>
                 <!-- حقل السعر الأصلي الجديد -->
-                <div class="form-group"><label>السعر الأصلي (ج.م - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
+                <div class="form-group"><label>السعر الأصلي (ج.م - اختياري)</label><input type="tel" id="add-original-price" inputmode="numeric" pattern="[0-9.,]*" oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" placeholder="اتركه فارغاً إذا لا يوجد"></div>
                 <div class="form-group"><label>المميزات</label><textarea id="add-features" rows="2" placeholder="مواصفات سريعة..."></textarea></div>
                 <div class="form-group"><label>رفع صورة للمنتج</label>
                     <div class="upload-area" onclick="document.getElementById('add-image-input').click()">
@@ -821,8 +821,11 @@
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
             const name = document.getElementById('edit-name').value;
-            const price = parseFloat(document.getElementById('edit-price').value);
-            const originalPrice = parseFloat(document.getElementById('edit-original-price').value) || 0;
+            // تنظيف السعر: إزالة الفواصل
+            const priceValue = document.getElementById('edit-price').value.replace(/,/g, '');
+            const price = parseFloat(priceValue);
+            const originalPriceValue = document.getElementById('edit-original-price').value.replace(/,/g, '');
+            const originalPrice = parseFloat(originalPriceValue) || 0;
             const features = document.getElementById('edit-features').value;
             const stores = getStoresFromContainer('edit-stores-container');
             const body = { name, price, originalPrice, features, stores };
@@ -972,15 +975,19 @@
         document.getElementById('add-submit-btn').addEventListener('click', function(e) {
             e.preventDefault();
             const name = document.getElementById('add-name').value.trim();
-            const price = document.getElementById('add-price').value.trim();
-            if (!name || !price) {
+            const priceRaw = document.getElementById('add-price').value.trim();
+            if (!name || !priceRaw) {
                 openSuccessModal('يرجى ملء اسم المنتج والسعر.');
                 return;
             }
-            const originalPrice = parseFloat(document.getElementById('add-original-price').value) || 0;
+            // تنظيف السعر: إزالة الفواصل
+            const priceValue = priceRaw.replace(/,/g, '');
+            const price = parseFloat(priceValue);
+            const originalPriceValue = document.getElementById('add-original-price').value.replace(/,/g, '');
+            const originalPrice = parseFloat(originalPriceValue) || 0;
             const features = document.getElementById('add-features').value;
             const stores = getStoresFromContainer('add-stores-container');
-            const body = { name, price: parseFloat(price), originalPrice, features, stores };
+            const body = { name, price, originalPrice, features, stores };
             if (tempAddImage && tempAddImage.startsWith('data:image')) {
                 body.image = tempAddImage;
             }

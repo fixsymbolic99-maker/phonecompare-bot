@@ -67,7 +67,8 @@ app.get('/api/images', authMiddleware, (req, res) => {
 });
 
 app.put('/api/products/:id', authMiddleware, async (req, res) => {
-  const { name, price, originalPrice, features, image, stores } = req.body;
+  // استقبال الحقول الجديدة للتقييم
+  const { name, price, originalPrice, features, image, stores, rating, reviews } = req.body;
   try {
     await dbService.connect();
     const product = await dbService.getProductById(req.params.id);
@@ -78,6 +79,9 @@ app.put('/api/products/:id', authMiddleware, async (req, res) => {
     if (features !== undefined) product.features = features;
     if (image !== undefined) product.image = image;
     if (stores !== undefined) product.stores = stores;
+    // حفظ التقييمات
+    if (rating !== undefined) product.rating = rating;
+    if (reviews !== undefined) product.reviews = reviews;
     await product.save();
     res.json({ message: 'Product updated' });
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -92,7 +96,8 @@ app.delete('/api/products/:id', authMiddleware, async (req, res) => {
 });
 
 app.post('/api/products', authMiddleware, async (req, res) => {
-  const { name, price, originalPrice, features, image, stores } = req.body;
+  // استقبال الحقول الجديدة للتقييم
+  const { name, price, originalPrice, features, image, stores, rating, reviews } = req.body;
   try {
     await dbService.connect();
     const Product = require('./services/database.service').Product;
@@ -103,7 +108,9 @@ app.post('/api/products', authMiddleware, async (req, res) => {
       currency: 'EGP',
       features,
       image,
-      stores: stores || []
+      stores: stores || [],
+      rating: rating || 0, // إضافة التقييم
+      reviews: reviews || 0 // إضافة عدد التقييمات
     });
     await newProduct.save();
     res.status(201).json({ message: 'Product added successfully', id: newProduct._id });
@@ -113,7 +120,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-// ===== المسار العام للموقع (مع السعر الأصلي والعملة المصرية) =====
+// ===== المسار العام للموقع =====
 app.get('/api/public/products', async (req, res) => {
   try {
     await dbService.connect();
@@ -126,7 +133,6 @@ app.get('/api/public/products', async (req, res) => {
       icon: p.image && p.image.startsWith('data:image') 
         ? `<img src="${p.image}" alt="${p.name}" />` 
         : `<div style="font-size:2.1rem;">📱</div>`,
-      // تعديل: إرسال السعر الخاص بكل متجر إذا وجد
       stores: (p.stores && p.stores.length > 0) 
         ? p.stores.map(s => ({ 
             name: s.storeId, 
@@ -135,8 +141,8 @@ app.get('/api/public/products', async (req, res) => {
             url: s.url 
           }))
         : [{ name: p.storeId || 'Store', price: Math.round(p.price), old: p.originalPrice > 0 ? Math.round(p.originalPrice) : 0, url: '' }],
-      rating: 4.5,
-      reviews: 100
+      rating: p.rating || 0, // إرسال التقييم الحقيقي
+      reviews: p.reviews || 0 // إرسال عدد التقييمات الحقيقي
     }));
 
     res.json(formatted);

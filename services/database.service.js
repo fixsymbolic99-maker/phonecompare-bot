@@ -2,11 +2,10 @@ const mongoose = require('mongoose');
 const config = require('../config/config');
 
 // ===== تعريف الموديلات (Schemas) =====
-// تم إضافة حقل السعر (price) للمتجر
 const storeSchema = new mongoose.Schema({
   storeId: { type: String, required: true },
   url: { type: String, default: '' },
-  price: { type: Number, default: 0 } // تمت الإضافة هنا
+  price: { type: Number, default: 0 }
 });
 
 const productSchema = new mongoose.Schema({
@@ -15,10 +14,13 @@ const productSchema = new mongoose.Schema({
   stores: [storeSchema],
   name: { type: String, required: true },
   price: { type: Number, required: true },
-  originalPrice: { type: Number, default: 0 }, // السعر الأصلي الجديد
-  currency: { type: String, default: 'EGP' }, // العملة الافتراضية جنيه مصري
+  originalPrice: { type: Number, default: 0 },
+  currency: { type: String, default: 'EGP' },
   image: { type: String, default: '' },
   features: { type: String, default: '' },
+  // ===== الحقول الجديدة للتقييم =====
+  rating: { type: Number, default: 0 },
+  reviews: { type: Number, default: 0 },
   lastUpdated: { type: Date, default: Date.now }
 });
 

@@ -293,15 +293,76 @@
             .admin-header-actions .btn-secondary, .admin-header-actions .btn-purple { flex: 1; justify-content: center; }
         }
 
-        /* --- تنسيقات إضافية لحقول التصنيف (Select) --- */
-        .category-select {
-            appearance: none !important;
-            -webkit-appearance: none !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239d9daa' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: left 1rem center !important; /* السهم على اليسار داخل الحقل */
-            padding-left: 2.5rem !important; /* مساحة للسهم في اليسار */
-            padding-right: 0.9rem !important;
+        /* --- تنسيق القائمة المنسدلة المخصصة (Custom Modal) --- */
+        .custom-dropdown-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .custom-dropdown-trigger {
+            width: 100%;
+            padding: .74rem .9rem;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
+            color: #fff;
+            font-size: .92rem;
+            font-family: inherit;
+            text-align: right;
+            cursor: pointer;
+            transition: border-color .18s var(--ease), box-shadow .18s var(--ease);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .custom-dropdown-trigger:hover,
+        .custom-dropdown-trigger.open {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+        .custom-dropdown-trigger .arrow {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            transition: transform .2s var(--ease);
+        }
+        .custom-dropdown-trigger.open .arrow {
+            transform: rotate(180deg);
+        }
+        .custom-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 110%;
+            left: 0;
+            right: 0;
+            background: #1c1c21;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.4rem;
+            z-index: 1000;
+            box-shadow: var(--shadow-pop);
+            backdrop-filter: blur(16px);
+        }
+        .custom-dropdown-menu.open {
+            display: block;
+        }
+        .custom-dropdown-option {
+            padding: .6rem .8rem;
+            cursor: pointer;
+            font-size: .85rem;
+            font-weight: 500;
+            color: #d6d6db;
+            border-radius: 8px;
+            transition: background-color .14s var(--ease), color .14s var(--ease);
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+        }
+        .custom-dropdown-option:hover {
+            background: var(--accent-soft);
+            color: #fff;
+        }
+        .custom-dropdown-option.selected {
+            background: var(--accent-soft-strong);
+            color: var(--accent-hover);
         }
     </style>
 </head>
@@ -459,14 +520,21 @@
                     </div>
                 </div>
 
-                <!-- ===== حقل التصنيف ===== -->
+                <!-- ===== حقل التصنيف المخصص ===== -->
                 <div class="form-group"><label>التصنيف (Category)</label>
-                    <select id="edit-category" class="category-select">
-                        <option value="phones">هواتف</option>
-                        <option value="watches">ساعات ذكية</option>
-                        <option value="accessories">إكسسوارات</option>
-                        <option value="laptops">لابتوب</option>
-                    </select>
+                    <div class="custom-dropdown-wrapper" id="edit-category-wrapper">
+                        <input type="hidden" id="edit-category" value="phones">
+                        <div class="custom-dropdown-trigger" id="edit-category-trigger">
+                            <span id="edit-category-text">هواتف</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="custom-dropdown-menu" id="edit-category-menu">
+                            <div class="custom-dropdown-option" data-value="phones">هواتف</div>
+                            <div class="custom-dropdown-option" data-value="watches">ساعات ذكية</div>
+                            <div class="custom-dropdown-option" data-value="accessories">إكسسوارات</div>
+                            <div class="custom-dropdown-option" data-value="laptops">لابتوب</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group"><label>المتاجر والروابط</label>
@@ -500,14 +568,21 @@
                     </div>
                 </div>
 
-                <!-- ===== حقل التصنيف ===== -->
+                <!-- ===== حقل التصنيف المخصص ===== -->
                 <div class="form-group"><label>التصنيف (Category)</label>
-                    <select id="add-category" class="category-select">
-                        <option value="phones">هواتف</option>
-                        <option value="watches">ساعات ذكية</option>
-                        <option value="accessories">إكسسوارات</option>
-                        <option value="laptops">لابتوب</option>
-                    </select>
+                    <div class="custom-dropdown-wrapper" id="add-category-wrapper">
+                        <input type="hidden" id="add-category" value="phones">
+                        <div class="custom-dropdown-trigger" id="add-category-trigger">
+                            <span id="add-category-text">هواتف</span>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="custom-dropdown-menu" id="add-category-menu">
+                            <div class="custom-dropdown-option" data-value="phones">هواتف</div>
+                            <div class="custom-dropdown-option" data-value="watches">ساعات ذكية</div>
+                            <div class="custom-dropdown-option" data-value="accessories">إكسسوارات</div>
+                            <div class="custom-dropdown-option" data-value="laptops">لابتوب</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group"><label>المتاجر والروابط</label>
@@ -562,7 +637,66 @@
                     addStoreRow('add-stores-container');
                 }
             }, 100);
+            
+            // تشغيل القوائم المخصصة بعد تحميل الصفحة
+            initCustomDropdowns();
         });
+
+        // ---- منطق القائمة المنسدلة المخصصة ----
+        function initCustomDropdowns() {
+            const wrappers = document.querySelectorAll('.custom-dropdown-wrapper');
+            wrappers.forEach(wrapper => {
+                const trigger = wrapper.querySelector('.custom-dropdown-trigger');
+                const menu = wrapper.querySelector('.custom-dropdown-menu');
+                const options = wrapper.querySelectorAll('.custom-dropdown-option');
+                const hiddenInput = wrapper.querySelector('input[type="hidden"]');
+
+                const toggleDropdown = (e) => {
+                    e.stopPropagation();
+                    const isOpen = menu.classList.contains('open');
+                    closeAllDropdowns();
+                    if (!isOpen) {
+                        menu.classList.add('open');
+                        trigger.classList.add('open');
+                    }
+                };
+
+                trigger.addEventListener('click', toggleDropdown);
+
+                options.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        const value = option.dataset.value;
+                        const text = option.textContent.trim();
+                        
+                        // تحديث الحقل المخفي
+                        hiddenInput.value = value;
+                        // تحديث النص الظاهر
+                        const textSpan = wrapper.querySelector('.custom-dropdown-trigger span');
+                        textSpan.textContent = text;
+                        
+                        // إزالة التحديد من الخيارات الأخرى
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        // إغلاق القائمة
+                        closeAllDropdowns();
+                    });
+                });
+            });
+
+            // إغلاق القوائم عند الضغط في أي مكان خارجها
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.custom-dropdown-wrapper')) {
+                    closeAllDropdowns();
+                }
+            });
+        }
+
+        function closeAllDropdowns() {
+            document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.remove('open'));
+            document.querySelectorAll('.custom-dropdown-trigger').forEach(t => t.classList.remove('open'));
+        }
+        // ----------------------------------------
 
         function addLog(message, type = 'green', container = logsContainer) {
             const time = new Date().toLocaleTimeString('ar-EG');
@@ -840,7 +974,12 @@
             document.getElementById('edit-features').value = product.features || '';
             document.getElementById('edit-rating').value = product.rating || '';
             document.getElementById('edit-reviews').value = product.reviews || '';
-            document.getElementById('edit-category').value = product.category || 'phones'; // تعبئة التصنيف
+            
+            // تعيين قيمة التصنيف المخصص
+            const category = product.category || 'phones';
+            document.getElementById('edit-category').value = category;
+            const textMap = { 'phones': 'هواتف', 'watches': 'ساعات ذكية', 'accessories': 'إكسسوارات', 'laptops': 'لابتوب' };
+            document.getElementById('edit-category-text').textContent = textMap[category] || 'هواتف';
             
             const storesContainer = document.getElementById('edit-stores-container');
             storesContainer.innerHTML = '';
@@ -876,7 +1015,7 @@
             const features = document.getElementById('edit-features').value;
             const rating = parseFloat(document.getElementById('edit-rating').value);
             const reviews = parseInt(document.getElementById('edit-reviews').value) || 0;
-            const category = document.getElementById('edit-category').value; // الحقل الجديد
+            const category = document.getElementById('edit-category').value; // الحقل المخصص الجديد
 
             const stores = getStoresFromContainer('edit-stores-container');
             const body = { name, price, originalPrice, features, stores, rating, reviews, category };
@@ -1017,7 +1156,11 @@
             document.getElementById('add-features').value = '';
             document.getElementById('add-rating').value = '';
             document.getElementById('add-reviews').value = '';
-            document.getElementById('add-category').value = 'phones'; // تعيين التصنيف الافتراضي
+            
+            // تعيين التصنيف الافتراضي للقائمة المخصصة
+            document.getElementById('add-category').value = 'phones';
+            document.getElementById('add-category-text').textContent = 'هواتف';
+            
             document.getElementById('add-stores-container').innerHTML = '';
             addStoreRow('add-stores-container');
             tempAddImage = null;
@@ -1041,7 +1184,7 @@
             const features = document.getElementById('add-features').value;
             const rating = parseFloat(document.getElementById('add-rating').value);
             const reviews = parseInt(document.getElementById('add-reviews').value) || 0;
-            const category = document.getElementById('add-category').value; // الحقل الجديد
+            const category = document.getElementById('add-category').value; // الحقل المخصص الجديد
 
             const stores = getStoresFromContainer('add-stores-container');
             const body = { name, price, originalPrice, features, stores, rating, reviews, category };
@@ -1075,4 +1218,4 @@
         });
     </script>
 </body>
-                </html>
+    </html>

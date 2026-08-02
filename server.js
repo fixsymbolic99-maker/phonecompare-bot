@@ -126,11 +126,11 @@ app.get('/api/public/products', async (req, res) => {
       icon: p.image && p.image.startsWith('data:image') 
         ? `<img src="${p.image}" alt="${p.name}" />` 
         : `<div style="font-size:2.1rem;">📱</div>`,
-      // تعديل: إرسال السعر الأصلي
+      // تعديل: إرسال السعر الخاص بكل متجر إذا وجد
       stores: (p.stores && p.stores.length > 0) 
         ? p.stores.map(s => ({ 
             name: s.storeId, 
-            price: Math.round(p.price), 
+            price: (s.price !== undefined && s.price > 0) ? Math.round(s.price) : Math.round(p.price), 
             old: p.originalPrice > 0 ? Math.round(p.originalPrice) : 0, 
             url: s.url 
           }))
